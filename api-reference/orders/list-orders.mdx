@@ -1,0 +1,71 @@
+---
+title: "Listar Pedidos"
+api: "GET /api/public/orders"
+description: "Retorna uma lista paginada dos pedidos da sua loja."
+---
+
+Retorna os pedidos da loja associada à API Key enviada. Suporta paginação e filtragem por e-mail e status do pedido.
+
+## Parâmetros de Query
+
+<ParamField query="email" type="string">
+  Filtra pedidos cujo e-mail do cliente corresponde parcialmente ao termo.
+</ParamField>
+
+<ParamField query="status" type="string | string[]">
+  Filtra por status do pedido. Pode ser um status único ou uma lista (ex.: `pending`, `completed`, `cancelled`).
+</ParamField>
+
+<ParamField query="page" default="1" type="number">
+  Página de resultados a ser exibida.
+</ParamField>
+
+<ParamField query="limit" default="15" type="number">
+  Quantidade de itens retornados por página (máx: `100`).
+</ParamField>
+
+<ParamField query="payment_status" type="string">
+  Filtra por status de pagamento. Valores: `pending`, `paid`, `refunded`.
+</ParamField>
+
+## Status de Pedido Disponíveis
+
+| Status | Descrição |
+|--------|-----------|
+| `pending` | Pedido criado, aguardando pagamento. |
+| `completed` | Pedido pago e entregue com sucesso. |
+| `cancelled` | Pedido cancelado. |
+| `delivered` | Produto/chave entregue ao cliente. |
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/orders?status=completed&limit=15&page=1' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 1054,
+      "order_number": "NX-1054",
+      "customer_email": "cliente@email.com",
+      "customer_name": "João da Silva",
+      "status": "delivered",
+      "payment_status": "paid",
+      "total": "59.80",
+      "created_at": "2026-07-07T18:00:00.000Z"
+    }
+  ],
+  "meta": {
+    "total": 320,
+    "page": 1,
+    "limit": 15,
+    "last_page": 22
+  }
+}
+```

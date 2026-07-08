@@ -1,0 +1,54 @@
+---
+title: "Obtendo Dados (Tags)"
+sidebarTitle: "Obtendo dados"
+icon: "tags"
+description: "Aprenda como utilizar tags para buscar produtos, listas de categorias e outras informações nas páginas."
+---
+
+Além das variáveis injetadas automaticamente, você pode usar tags especiais para carregar coleções específicas de dados do banco da Nerix diretamente no tema.
+
+---
+
+## 📦 Tag `fetch_products`
+
+A tag `fetch_products` permite que você carregue uma lista de produtos utilizando filtros como categoria, limite de itens e ordenação.
+
+### Sintaxe Básica:
+
+```html
+{% fetch_products var="recent_products" limit=4 order="newest" %}
+
+<div class="row">
+  {% for product in recent_products %}
+    <div className="card">
+      <h4>{{ product.name }}</h4>
+      <span>R$ {{ product.price }}</span>
+    </div>
+  {% endfor %}
+</div>
+```
+
+### Atributos Disponíveis:
+
+| Atributo | Tipo | Descrição |
+|:---|:---|:---|
+| `var` | `string` (obrigatório) | Nome da variável onde a coleção de produtos será armazenada. |
+| `limit` | `number` | Limite de produtos retornados. |
+| `category` | `string` | Slug de uma categoria para filtrar (ex: `gift-cards`). |
+| `order` | `string` | Critério de ordenação (`newest`, `oldest`, `price_asc`, `price_desc`, `popular`). |
+
+---
+
+## 🏷️ Tag `fetch_categories`
+
+Use a tag `fetch_categories` para puxar e exibir o menu de categorias ativas da sua loja de forma dinâmica:
+
+```html
+{% fetch_categories var="all_categories" %}
+
+<nav class="categories-menu">
+  {% for category in all_categories %}
+    <a href="/category/{{ category.slug }}">{{ category.name }}</a>
+  {% endfor %}
+</nav>
+```

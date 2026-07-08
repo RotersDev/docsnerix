@@ -1,0 +1,73 @@
+---
+title: "Sintaxe do Template"
+sidebarTitle: "Sintaxe"
+icon: "brackets-curly"
+description: "Aprenda as regras de sintaxe, delimitadores e blocos condicionais para programar no tema Nerix."
+---
+
+A engine de templates da Nerix utiliza delimitadores lógicos simples inspirados em sistemas modernos de templating (como Liquid e Nunjucks). Com ela, você pode injetar variáveis do servidor, aplicar lógica condicional e repetir elementos usando loops.
+
+---
+
+## 🏷️ Delimitadores Principais
+
+Existem dois delimitadores básicos que você utilizará na construção das páginas:
+
+### 1. Injeção de Variáveis: `{{ ... }}`
+Usado para imprimir um valor ou conteúdo diretamente no HTML.
+```html
+<h1>Bem-vindo à {{ store.name }}</h1>
+```
+
+### 2. Declarações Lógicas e de Controle: `{% ... %}`
+Usado para executar condicionais, loops e inclusões de componentes.
+```html
+{% if customer.is_logged %}
+  <p>Olá, {{ customer.name }}!</p>
+{% endif %}
+```
+
+---
+
+## ⚡ Condicionais (`if`, `elif`, `else`)
+
+Controle o que é exibido para o seu cliente final utilizando blocos condicionais:
+
+```html
+{% if product.stock > 10 %}
+  <span class="badge-success">Em Estoque</span>
+{% elif product.stock > 0 %}
+  <span class="badge-warning">Poucas Unidades Restantes</span>
+{% else %}
+  <span class="badge-danger">Esgotado</span>
+{% endif %}
+```
+
+---
+
+## 🔄 Repetições e Loops (`for`)
+
+Itere sobre arrays de dados como listas de produtos, categorias ou itens do carrinho:
+
+```html
+<div class="product-grid">
+  {% for product in products %}
+    <div class="product-card">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}" />
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.price | currency }}</p>
+    </div>
+  {% endfor %}
+</div>
+```
+
+---
+
+## 📦 Inclusão de Arquivos (`include`)
+
+Você pode quebrar seu HTML em partes menores e organizá-las na pasta `/components`. Para carregar esses blocos, utilize:
+
+```html
+<!-- Carrega o cabeçalho global -->
+{% include 'components/header.html' %}
+```

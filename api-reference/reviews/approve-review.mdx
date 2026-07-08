@@ -1,0 +1,41 @@
+---
+title: "Aprovar Avaliação"
+api: "POST /api/public/reviews/{id}/approve"
+description: "Aprova uma avaliação pendente da sua loja."
+---
+
+Aprova e publica uma avaliação de produto enviada por um cliente em sua loja.
+
+## Parâmetros de Rota
+
+<ParamField path="id" type="number" required>
+  ID da avaliação (`Review` ID) que deseja aprovar.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/reviews/15/approve' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "success": true,
+  "message": "Avaliação aprovada com sucesso",
+  "review": {
+    "id": 15,
+    "store_id": 1,
+    "product_id": 56,
+    "customer_name": "Marcos Silva",
+    "rating": 4,
+    "comment": "Muito bom produto, recomendo.",
+    "status": "approved",
+    "updatedAt": "2026-07-08T03:15:00.000Z",
+    "createdAt": "2026-07-07T09:20:00.000Z"
+  }
+}
+```

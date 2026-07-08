@@ -1,0 +1,39 @@
+---
+title: "Aprovar Solicitação de Afiliação"
+api: "POST /api/public/affiliates/requests/{id}/approve"
+description: "Aprova uma solicitação de afiliação pendente na sua loja."
+---
+
+Aprova a solicitação de afiliação de um usuário na sua loja e gera seu cadastro de afiliado ativo.
+
+## Parâmetros de Rota
+
+<ParamField path="id" type="number" required>
+  ID da solicitação de afiliação (`AffiliateRequest` ID) obtido via painel ou webhook.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/affiliates/requests/5/approve' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "success": true,
+  "message": "Solicitação de afiliação aprovada com sucesso",
+  "affiliate": {
+    "id": 9,
+    "store_id": 1,
+    "user_id": 122,
+    "commission_rate": 10,
+    "status": "active",
+    "updatedAt": "2026-07-08T03:13:50.000Z",
+    "createdAt": "2026-07-08T03:13:50.000Z"
+  }
+}
+```

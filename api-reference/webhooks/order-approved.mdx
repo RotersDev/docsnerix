@@ -1,0 +1,143 @@
+---
+title: "Webhooks da Plataforma"
+api: "POST /seu-endpoint-de-webhook"
+description: "Receba notificações em tempo real sempre que um pedido for pago, atualizado ou entregue na sua loja Nerix."
+---
+
+Os Webhooks permitem que a Nerix envie notificações automáticas `POST` em formato JSON diretamente para o seu servidor sempre que eventos importantes ocorrerem na sua loja. Isso é ideal para integrar com sistemas de entrega, ERPs, CRMs ou automatizar fluxos personalizados.
+
+---
+
+## Como Configurar
+
+1. Acesse o painel da sua loja em [nerix.com.br](https://nerix.com.br).
+2. Vá em **Configurações → Webhooks**.
+3. Insira a URL do seu servidor que irá receber as requisições (ex: `https://seu-servidor.com/webhooks/nerix`).
+4. Selecione os eventos que deseja escutar.
+5. Salve as alterações.
+
+<Note>
+  A Nerix enviará uma requisição `POST` com `Content-Type: application/json` para a URL configurada. Seu servidor deve responder com HTTP `200 OK` em até **5 segundos** para confirmar o recebimento do evento.
+</Note>
+
+---
+
+## Eventos Disponíveis
+
+| Evento | Descrição |
+|:---|:---|
+| `order.created` | Disparado imediatamente quando um novo pedido é gerado no checkout. |
+| `order.paid` | Disparado quando o pagamento é confirmado pelo gateway (Pix ou Cartão). |
+| `order.delivered` | Disparado quando o pedido é marcado como entregue (chaves de licença associadas enviadas). |
+| `order.cancelled` | Disparado se o pedido expirar por falta de pagamento ou for cancelado manualmente. |
+
+---
+
+## Formato do Payload (Exemplo)
+
+```json
+{
+  "event": "order.paid",
+  "created_at": "2026-07-08T03:15:00.000Z",
+  "data": {
+    "id": 1054,
+    "order_number": "NX-1054",
+    "customer_email": "cliente@email.com",
+    "customer_name": "João da Silva",
+    "status": "delivered",
+    "payment_status": "paid",
+    "total": "59.80",
+    "items": [
+      {
+        "id": 432,
+        "product_id": 12,
+        "name": "Minecraft Java & Bedrock Edition",
+        "quantity": 1,
+        "price": "59.80",
+        "product_key": "XXXX-XXXX-XXXX-XXXX"
+      }
+    ],
+    "tracking": {
+      "utm_source": "google",
+      "utm_medium": "cpc",
+      "utm_campaign": "black-friday",
+      "src": "src_campaign_xyz"
+    }
+  }
+}
+```
+
+---
+
+## Detalhes dos Campos
+
+| Campo | Tipo | Descrição |
+|:---|:---|:---|
+| `event` | `string` | Nome do evento disparado (ex.: `order.paid`). |
+| `created_at` | `string` | Data e hora do evento em formato ISO 8601 (UTC). |
+| `data.id` | `number` | ID interno do pedido. |
+| `data.order_number` | `string` | Código de identificação do pedido (ex: `NX-1054`). |
+| `data.customer_email` | `string` | E-mail do comprador. |
+| `data.customer_name` | `string` | Nome completo do comprador. |
+| `data.status` | `string` | Status do pedido (`pending`, `completed`, `cancelled`, `delivered`). |
+| `data.payment_status` | `string` | Status do pagamento (`pending`, `paid`, `refunded`). |
+| `data.total` | `string` | Valor total do pedido formatado como string decimal. |
+| `data.items` | `array` | Lista de produtos comprados no pedido. |
+| `data.items[].product_key` | `string` | Chave/licença entregue ao cliente (se for produto digital). |
+
+---
+
+## 🔒 Segurança do Endpoint
+
+Para garantir que a requisição partiu legitimamente dos servidores da Nerix, você deve implementar uma validação de segurança.
+
+<Warning>
+  Recomendamos que você configure uma chave secreta (token) na sua URL como query param, por exemplo: `https://seusite.com/webhook?secret=SEU_TOKEN_SECRETO`, e valide no seu código se o parâmetro recebido coincide com o token esperado.
+</Warning>
+
+### Exemplo de implementação em Node.js (Express):
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+app.post('/webhooks/nerix', (req, res) => {
+  const { secret } = req.query;
+  const EXPECTED_SECRET = 'SEU_TOKEN_SECRETO'; // Guarde isto em variável de ambiente
+
+  // 1. Validar Token de Segurança
+  if (secret !== EXPECTED_SECRET) {
+    return res.status(401).json({ error: 'Assinatura inválida' });
+  }
+
+  const { event, data } = req.body;
+
+  // 2. Responder 200 OK imediatamente para evitar timeouts
+  res.status(200).send('OK');
+
+  // 3. Processar o evento de forma assíncrona (Ex: Fila/Background job)
+  switch (event) {
+    case 'order.paid':
+      console.log(`Pedido ${data.order_number} pago por ${data.customer_name}`);
+      // Lógica de liberação ou entrega adicional aqui
+      break;
+    case 'order.delivered':
+      console.log(`Pedido ${data.order_number} entregue ao cliente.`);
+      break;
+    default:
+      console.log(`Evento ignorado: ${event}`);
+  }
+});
+
+app.listen(3000, () => console.log('Servidor de webhook rodando na porta 3000'));
+```
+
+---
+
+## Boas Práticas
+
+- **Processamento Assíncrono:** Sempre responda o HTTP `200 OK` imediatamente e processe o payload em segundo plano. Requisições pesadas no mesmo thread podem estourar o limite de 5 segundos e acusar timeout.
+- **HTTPS Obrigatório:** Utilize sempre conexões seguras sob protocolo HTTPS para evitar interceptação de dados sensíveis de transações.
+- **Redundância:** Valide se o evento não é duplicado verificando o `data.id` ou `data.order_number` no seu banco de dados antes de processar.

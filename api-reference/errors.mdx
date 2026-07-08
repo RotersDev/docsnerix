@@ -1,0 +1,38 @@
+---
+title: "Tratamento de Erros"
+sidebarTitle: "Tratamento de Erros"
+icon: "triangle-exclamation"
+description: "Aprenda sobre os códigos de retorno e o formato de erro retornado pela API da Nerix."
+---
+
+A API da Nerix utiliza códigos de status HTTP convencionais para indicar o sucesso ou falha de uma requisição de API. Em geral:
+
+*   Códigos na faixa **`2xx`** indicam sucesso.
+*   Códigos na faixa **`4xx`** indicam uma falha com base nas informações fornecidas (ex.: parâmetro ausente, chave incorreta, limite de requisições).
+*   Códigos na faixa **`5xx`** indicam um erro nos servidores da Nerix.
+
+---
+
+## 📁 Formato de Erro
+
+Sempre que uma requisição falhar, a API retornará uma resposta JSON contendo o campo `error` detalhando o ocorrido:
+
+```json
+{
+  "error": "Mensagem detalhada contendo o motivo da falha."
+}
+```
+
+---
+
+## 🚦 Códigos de Status Comuns
+
+| Código HTTP | Significado | Descrição |
+| :--- | :--- | :--- |
+| `200 OK` | Sucesso | A requisição foi processada com sucesso e os dados foram retornados. |
+| `201 Created` | Criado | O recurso (ex. cupom, produto) foi criado com sucesso. |
+| `400 Bad Request` | Requisição Inválida | Parâmetros obrigatórios ausentes, dados mal formatados ou falha de validação. |
+| `401 Unauthorized` | Não Autorizado | A chave da API (`X-nerixkey`) está ausente, é inválida ou expirou. |
+| `404 Not Found` | Não Encontrado | O recurso solicitado (ID ou rota) não existe na sua loja. |
+| `429 Too Many Requests` | Limite Excedido | Você excedeu o limite de requisições da janela atual (consulte [Limites de Requisição](/api-reference/rate-limits)). |
+| `500 Internal Error` | Erro Interno | Ocorreu um problema inesperado em nossos servidores. Entre em contato com a equipe de suporte. |

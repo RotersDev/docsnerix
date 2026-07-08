@@ -1,0 +1,42 @@
+---
+title: "Listar Cupons"
+api: "GET /api/public/coupons"
+description: "Retorna todos os cupons cadastrados na sua loja."
+---
+
+Retorna a lista completa de cupons ativos e inativos configurados na loja.
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/coupons' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+[
+  {
+    "id": 5,
+    "code": "NERIX10",
+    "type": "percentage",
+    "value": 10.00,
+    "max_uses": 100,
+    "used_count": 45,
+    "status": "active",
+    "expires_at": "2026-12-31T23:59:59.000Z"
+  },
+  {
+    "id": 6,
+    "code": "WELCOME20",
+    "type": "fixed",
+    "value": 20.00,
+    "max_uses": null,
+    "used_count": 12,
+    "status": "active",
+    "expires_at": null
+  }
+]
+```

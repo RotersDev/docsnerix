@@ -1,0 +1,60 @@
+---
+title: "Variáveis Globais"
+sidebarTitle: "Variáveis Globais"
+icon: "database"
+description: "Dicionário de variáveis dinâmicas injetadas pela Nerix que estão disponíveis em qualquer parte do seu tema."
+---
+
+Ao renderizar qualquer página da sua loja, a Nerix injeta automaticamente objetos contendo informações atualizadas da loja, do usuário, do carrinho de compras e das configurações de aparência.
+
+---
+
+## 🌎 Lista de Variáveis Globais
+
+Abaixo estão descritos os principais objetos acessíveis em qualquer arquivo `.html` do seu tema:
+
+### `store` (Dados da Loja)
+Fornece informações institucionais e configurações gerais do e-commerce.
+
+| Atributo | Tipo | Descrição |
+|:---|:---|:---|
+| `store.name` | `string` | Nome da loja. |
+| `store.subdomain` | `string` | Subdomínio da loja na plataforma (ex.: `minhaloja.nerix.com.br`). |
+| `store.logo_url` | `string` | URL da imagem de logotipo configurada no painel. |
+| `store.favicon_url` | `string` | URL do ícone de abas do navegador. |
+| `store.support_email` | `string` | E-mail oficial de suporte da loja. |
+
+---
+
+### `customer` (Cliente Conectado)
+Contém dados do cliente que está navegando no momento, caso ele esteja logado na área do cliente.
+
+| Atributo | Tipo | Descrição |
+|:---|:---|:---|
+| `customer.is_logged` | `boolean` | Retorna `true` se o cliente estiver logado na conta da loja. |
+| `customer.name` | `string` | Nome do cliente logado. |
+| `customer.email` | `string` | E-mail do cliente logado. |
+| `customer.balance` | `number` | Saldo acumulado na carteira interna da loja. |
+
+---
+
+### `cart` (Carrinho de Compras)
+Contém o estado atual dos produtos adicionados pelo comprador.
+
+| Atributo | Tipo | Descrição |
+|:---|:---|:---|
+| `cart.items` | `array` | Lista de itens adicionados ao carrinho. |
+| `cart.total_price` | `number` | Soma total do preço dos produtos no carrinho. |
+| `cart.items_count` | `number` | Quantidade total de itens no carrinho. |
+
+---
+
+### `settings` (Aparência Personalizável)
+Este objeto carrega os valores definidos pelo lojista através do arquivo `schema.json` no painel de aparência.
+
+```html
+<!-- Exemplo de uso de configurações dinâmicas de estilo -->
+<div style="background-color: {{ settings.primary_color }}; color: {{ settings.text_color }};">
+  {{ settings.banner_title }}
+</div>
+```

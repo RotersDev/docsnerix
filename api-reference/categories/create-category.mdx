@@ -1,0 +1,69 @@
+---
+title: "Criar Categoria"
+api: "POST /api/public/categories"
+description: "Cria uma nova categoria na sua loja."
+---
+
+Adiciona uma nova categoria ao catálogo para segmentar seus produtos. Requer autenticação via API Key.
+
+## Corpo da Requisição
+
+Os dados podem ser enviados em formato `application/json` ou `multipart/form-data`.
+
+<ParamField body="name" type="string" required>
+  Nome da categoria (ex.: `Jogos PC`).
+</ParamField>
+
+<ParamField body="image_url" type="string">
+  URL da imagem de banner da categoria (usada no topo da página de categoria).
+</ParamField>
+
+<ParamField body="card_image_url" type="string">
+  URL da imagem de card da categoria (formato 16:9, exibida nos cards do catálogo).
+</ParamField>
+
+<ParamField body="badge" type="string">
+  Badge promocional/destaque exibido sobre o card (ex.: `Novo`, `Promoção`, `Mais Vendidos`).
+</ParamField>
+
+<ParamField body="slug" type="string">
+  Slug personalizado para URL (ex.: `jogos-pc`). Se não informado, é gerado automaticamente.
+</ParamField>
+
+<ParamField body="active" default="true" type="boolean">
+  Se `false`, a categoria é criada mas não aparece na loja pública.
+</ParamField>
+
+<ParamField body="order" type="number">
+  Posição de exibição da categoria no catálogo (menor número = aparece primeiro).
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/categories' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Jogos PC",
+    "badge": "Mais Vendidos",
+    "slug": "jogos-pc",
+    "active": true,
+    "order": 1
+  }'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 3,
+  "name": "Jogos PC",
+  "slug": "jogos-pc",
+  "badge": "Mais Vendidos",
+  "active": true,
+  "order": 1,
+  "created_at": "2026-07-07T18:00:00.000Z"
+}
+```

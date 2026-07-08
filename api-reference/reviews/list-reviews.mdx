@@ -1,0 +1,42 @@
+---
+title: "Listar Avaliações"
+api: "GET /api/public/reviews"
+description: "Retorna a listagem de avaliações dos clientes da sua loja."
+---
+
+Retorna todas as avaliações de produtos (comentários, notas, status de aprovação) cadastradas em sua loja.
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/reviews' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+[
+  {
+    "id": 14,
+    "store_id": 1,
+    "product_id": 56,
+    "customer_name": "Juliana Santos",
+    "rating": 5,
+    "comment": "Excelente entrega, muito rápido!",
+    "status": "approved",
+    "createdAt": "2026-07-06T15:45:00.000Z"
+  },
+  {
+    "id": 15,
+    "store_id": 1,
+    "product_id": 56,
+    "customer_name": "Marcos Silva",
+    "rating": 4,
+    "comment": "Muito bom produto, recomendo.",
+    "status": "pending",
+    "createdAt": "2026-07-07T09:20:00.000Z"
+  }
+]
+```

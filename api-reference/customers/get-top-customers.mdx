@@ -1,0 +1,40 @@
+---
+title: "Top Clientes"
+api: "GET /api/public/customers/top"
+description: "Retorna os clientes que mais compraram em valor na sua loja."
+---
+
+Retorna um ranking dos clientes que possuem pedidos aprovados na sua loja, ordenados pelo valor total gasto.
+
+## Parâmetros de Query
+
+<ParamField query="limit" default="10" type="number">
+  Quantidade de clientes retornados no ranking.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/customers/top?limit=5' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+[
+  {
+    "customer_email": "mariasouza@gmail.com",
+    "customer_name": "Maria Souza",
+    "orders_count": 8,
+    "total_spent": 1250.50
+  },
+  {
+    "customer_email": "joaosilva@hotmail.com",
+    "customer_name": "João Silva",
+    "orders_count": 3,
+    "total_spent": 490.00
+  }
+]
+```

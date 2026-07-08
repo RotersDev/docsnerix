@@ -1,0 +1,48 @@
+---
+title: "Verificar Pagamento"
+api: "POST /api/public/orders/{orderNumber}/check-payment"
+description: "Consulta e atualiza o status de pagamento de um pedido em tempo real."
+---
+
+Verifica se o pagamento do pedido foi concluído junto ao gateway. Caso confirmado, o status do pedido e do pagamento são atualizados no banco de dados e as integrações (como entrega de chaves e webhooks) são disparadas.
+
+<Note>
+  Use este endpoint no fluxo de confirmação de compra para garantir que o cliente receba seu produto imediatamente após o pagamento via Pix, sem precisar esperar por webhooks externos.
+</Note>
+
+## Parâmetros de Path
+
+<ParamField path="orderNumber" type="string" required>
+  Código único do pedido (ex: `NX-1054`).
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/orders/NX-1054/check-payment' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta (Pago)
+
+```json
+{
+  "order_number": "NX-1054",
+  "payment_status": "paid",
+  "status": "delivered",
+  "updated": true,
+  "keys_delivered": true
+}
+```
+
+## Exemplo de Resposta (Pendente)
+
+```json
+{
+  "order_number": "NX-1054",
+  "payment_status": "pending",
+  "status": "pending",
+  "updated": false
+}
+```

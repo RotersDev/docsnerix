@@ -1,0 +1,58 @@
+---
+title: "Filtros de Formatação"
+sidebarTitle: "Filtros"
+icon: "filter"
+description: "Veja a lista completa de filtros da Nerix para formatar texto, valores financeiros e datas no front-end."
+---
+
+Os **filtros** são usados para modificar ou formatar dados exibidos nas suas variáveis antes de renderizá-los no navegador. Eles são declarados utilizando o caractere pipe `|` após o nome da variável.
+
+---
+
+## 💸 Filtros de Moeda e Preços
+
+### `currency`
+Formata um valor numérico em reais (BRL).
+
+```html
+<!-- Se product.price = 59.90 -->
+<span>{{ product.price | currency }}</span>
+<!-- Resultado: R$ 59,90 -->
+```
+
+---
+
+## 📝 Filtros de Texto e Strings
+
+### `upper`
+Converte todos os caracteres da string para letras maiúsculas.
+```html
+<p>{{ store.name | upper }}</p>
+```
+
+### `lower`
+Converte todos os caracteres da string para letras minúsculas.
+```html
+<p>{{ product.name | lower }}</p>
+```
+
+### `truncate`
+Corta uma string após um número específico de caracteres e adiciona reticências `...`.
+```html
+<!-- Se product.description = "Esta é uma descrição longa do item" -->
+<p>{{ product.description | truncate: 15 }}</p>
+<!-- Resultado: Esta é uma descr... -->
+```
+
+---
+
+## 📅 Filtros de Data
+
+### `date`
+Formata objetos de data ou strings ISO utilizando padrões específicos.
+
+```html
+<!-- Formato padrão brasileiro -->
+<span>Criado em: {{ order.created_at | date: "DD/MM/YYYY" }}</span>
+<!-- Resultado: 08/07/2026 -->
+```

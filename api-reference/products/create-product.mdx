@@ -1,0 +1,82 @@
+---
+title: "Criar Produto"
+api: "POST /api/public/products"
+description: "Cria um novo produto/pacote na loja."
+---
+
+Adiciona um novo produto/pacote ao catálogo da loja. Requer autenticação via API Key. Envie os dados em `multipart/form-data` se quiser fazer upload de imagens diretamente, ou `application/json` para usar URLs de imagens existentes.
+
+## Corpo da Requisição
+
+<ParamField body="name" type="string" required>
+  Nome do produto.
+</ParamField>
+
+<ParamField body="price" type="number" required>
+  Preço regular do produto (em reais, ex.: `59.80`).
+</ParamField>
+
+<ParamField body="promotional_price" type="number">
+  Preço promocional se houver desconto ativo. Deve ser menor que `price`.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descrição completa do produto (suporta markdown).
+</ParamField>
+
+<ParamField body="category_id" type="number">
+  ID da categoria a qual o produto pertence.
+</ParamField>
+
+<ParamField body="infinite_stock" default="false" type="boolean">
+  Se `true`, o estoque é infinito e a venda não consome chaves. Se `false`, o estoque depende das chaves cadastradas ou do limite definido.
+</ParamField>
+
+<ParamField body="stock_limit" type="number">
+  Limite manual de estoque (obrigatório se `infinite_stock` for `false` e você não estiver usando chaves automáticas).
+</ParamField>
+
+<ParamField body="images" type="array | file">
+  Pode ser enviado como array de strings com URLs de imagens existentes ou arquivos reais no campo `images` se usado multipart.
+</ParamField>
+
+<ParamField body="active" default="true" type="boolean">
+  Se `false`, o produto é criado mas não aparece na loja pública.
+</ParamField>
+
+<ParamField body="slug" type="string">
+  Slug personalizado para URL amigável (ex.: `minecraft-java`). Se não informado, é gerado automaticamente a partir do nome.
+</ParamField>
+
+## Exemplo de Requisição (JSON)
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/products' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Minecraft Java & Bedrock Edition",
+    "price": 59.80,
+    "description": "Jogue em qualquer plataforma.",
+    "category_id": 3,
+    "infinite_stock": false,
+    "stock_limit": 100,
+    "images": ["https://cdn.example.com/minecraft.png"]
+  }'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 12,
+  "name": "Minecraft Java & Bedrock Edition",
+  "slug": "minecraft-java-bedrock-edition",
+  "price": "59.80",
+  "promotional_price": null,
+  "active": true,
+  "stock": 100,
+  "created_at": "2026-07-07T18:00:00.000Z"
+}
+```

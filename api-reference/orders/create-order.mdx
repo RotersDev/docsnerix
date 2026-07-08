@@ -1,0 +1,35 @@
+---
+title: "Criar Pedido"
+api: "POST /api/public/orders"
+description: "Cria um novo pedido na loja."
+---
+
+Inicia um pedido na loja com os produtos selecionados e dados do cliente. Retorna o pedido criado com o link de pagamento e dados de cobrança (Pix/Cartão).
+
+## Corpo da Requisição
+
+<ParamField body="items" type="array" required>
+  Lista de itens do pedido. Cada objeto deve conter:
+
+  - `product_id` (number, obrigatório): ID do produto/pacote.
+  - `variant_id` (number, opcional): ID da variante do produto.
+  - `quantity` (number, opcional, padrão: `1`): Quantidade do item.
+  - `order_bump_id` (number, opcional): ID do Order Bump associado.
+</ParamField>
+
+<ParamField body="customer" type="object" required>
+  Dados do comprador:
+
+  - `email` (string, obrigatório): E-mail do cliente.
+  - `document` (string, opcional): CPF ou CNPJ.
+  - `name` (string, opcional): Nome completo.
+  - `address` (object, opcional): Endereço do cliente contendo `zip_code`, `street`, `number`, `complement`, `neighborhood`, `city`, `state`.
+</ParamField>
+
+<ParamField body="coupon_code" type="string">
+  Cupom de desconto a ser aplicado (ex: `BEMVINDO10`).
+</ParamField>
+
+<ParamField body="affiliate_code" type="string">
+  Código de afiliado para atribuição de comissão.
+</ParamField>

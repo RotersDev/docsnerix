@@ -1,0 +1,86 @@
+---
+title: "Listar Produtos"
+api: "GET /api/public/products"
+description: "Retorna todos os produtos/pacotes da sua loja."
+---
+
+Retorna os produtos cadastrados na loja. **Endpoints públicos** listam apenas produtos ativos. Com uma **API Key** válida, você pode visualizar todos os produtos, incluindo os inativos.
+
+## Parâmetros de Query
+
+<ParamField query="category_id" type="number">
+  Filtra produtos pertencentes à categoria correspondente ao ID informado.
+</ParamField>
+
+<ParamField query="category_slug" type="string">
+  Filtra produtos pelo slug da categoria (ex.: `jogos-pc`).
+</ParamField>
+
+<ParamField query="search" type="string">
+  Pesquisa produtos pelo nome ou descrição contendo o termo informado.
+</ParamField>
+
+<ParamField query="page" default="1" type="number">
+  Página de resultados a ser exibida.
+</ParamField>
+
+<ParamField query="limit" default="20" type="number">
+  Quantidade de itens retornados por página (máx: `100`).
+</ParamField>
+
+<ParamField query="include_inactive" default="false" type="boolean">
+  Se `true`, inclui produtos inativos. **Requer API Key.**
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/products?category_slug=jogos-pc&limit=10' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 12,
+      "name": "Minecraft Java & Bedrock Edition",
+      "slug": "minecraft-java-bedrock",
+      "price": "59.80",
+      "promotional_price": null,
+      "description": "Jogue em qualquer plataforma com uma única conta.",
+      "category_id": 3,
+      "infinite_stock": false,
+      "stock": 42,
+      "images": ["https://cdn.nerix.com.br/images/minecraft.png"],
+      "variants": [],
+      "active": true,
+      "created_at": "2026-01-15T10:00:00.000Z"
+    }
+  ],
+  "meta": {
+    "total": 128,
+    "page": 1,
+    "limit": 20,
+    "last_page": 7
+  }
+}
+```
+
+## Campos Retornados
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | `number` | ID único do produto. |
+| `name` | `string` | Nome do produto. |
+| `slug` | `string` | Slug único para URL amigável. |
+| `price` | `string` | Preço regular formatado. |
+| `promotional_price` | `string \| null` | Preço promocional, se ativo. |
+| `stock` | `number` | Estoque disponível atual. |
+| `infinite_stock` | `boolean` | Se `true`, o produto não consome estoque. |
+| `images` | `array` | Lista de URLs das imagens. |
+| `variants` | `array` | Variantes de preço disponíveis. |
+| `active` | `boolean` | Se o produto está ativo e visível na loja. |

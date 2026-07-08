@@ -1,0 +1,28 @@
+---
+title: "Excluir Todas as Categorias"
+api: "DELETE /api/public/categories/all"
+description: "Remove todas as categorias da loja permanentemente."
+---
+
+Realiza a exclusão em massa de todas as categorias cadastradas na loja.
+
+<Danger>
+  Esta ação é **irreversível**. Todos os vínculos de categorias com produtos serão removidos. Os produtos não serão excluídos, mas ficarão sem categoria associada.
+</Danger>
+
+## Exemplo de Requisição
+
+```bash
+curl --request DELETE \
+  --url 'https://api.nerix.com.br/api/public/categories/all' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "deleted": 6,
+  "message": "Todas as categorias foram excluídas com sucesso."
+}
+```

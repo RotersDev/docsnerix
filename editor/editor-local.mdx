@@ -1,0 +1,40 @@
+---
+title: "Editor Local & CLI"
+sidebarTitle: "Editor Local (CLI)"
+icon: "terminal"
+description: "Codifique no seu próprio computador e sincronize os arquivos com o editor da Nerix em tempo real."
+---
+
+Para desenvolvedores que preferem trabalhar em seus próprios ambientes locais (como VS Code, Cursor ou WebStorm) e utilizar ferramentas como Git, a Nerix oferece suporte à sincronização local via terminal.
+
+Com isso, qualquer alteração que você salvar no seu editor de código local será sincronizada instantaneamente na nuvem.
+
+---
+
+## 🚀 Como Iniciar o Desenvolvimento Local
+
+Não é necessário instalar nenhum pacote globalmente. O processo de autenticação e início é feito através de um token temporário gerado diretamente no editor web:
+
+<Steps>
+  <Step title="Abra o Editor de Código Web">
+    Acesse o painel da sua loja Nerix, vá em **Aparência → Personalizar** para abrir o Editor de Templates.
+  </Step>
+
+  <Step title="Inicie a Sessão Local">
+    No cabeçalho do editor, ao lado do botão de Sair, clique no ícone de opções (**três pontos verticais `...`**) e selecione **"Sessão local (no seu PC)"**.
+  </Step>
+
+  <Step title="Copie o Comando de Conexão">
+    Um modal se abrirá exibindo o comando de inicialização com seu token de acesso exclusivo. Clique para copiar o comando:
+    
+    ```bash
+    npx nerix-editor@latest --token <SEU_TOKEN_AQUI>
+    ```
+  </Step>
+
+  <Step title="Execute no seu Terminal">
+    Abra a pasta contendo os arquivos do seu tema no terminal do seu computador, cole o comando copiado e aperte Enter. 
+    
+    A CLI do `nerix-editor` baixará os arquivos necessários e iniciará o modo de escuta (watch), transmitindo qualquer alteração de código local de volta para a plataforma automaticamente ao salvar.
+  </Step>
+</Steps>

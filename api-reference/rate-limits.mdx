@@ -1,0 +1,41 @@
+---
+title: "Limites de Requisição"
+sidebarTitle: "Limites de Requisição"
+icon: "gauge"
+description: "Entenda os limites de requisições (rate limits) aplicados nas APIs públicas da Nerix."
+---
+
+Para garantir o desempenho, a estabilidade e a alta disponibilidade da plataforma Nerix para todos os lojistas, aplicamos limites de requisição (*rate limiting*) nos endpoints das nossas APIs públicas.
+
+---
+
+## ⚡ Limites de Uso
+
+Os limites de chamadas são calculados com base no endereço IP de origem do cliente e na chave de API da loja (`X-nerixkey`):
+
+*   **Operações de Leitura (GET):** Máximo de **120 requisições por minuto** por IP/Loja.
+*   **Operações de Escrita (POST, PUT, DELETE):** Máximo de **30 requisições por minuto** por IP/Loja.
+*   **Limite Global de Segurança:** No máximo **1200 requisições totais a cada 15 minutos**.
+
+---
+
+## 📊 Headers de Controle
+
+Toda resposta HTTP da nossa API inclui cabeçalhos de controle que permitem monitorar o seu consumo em tempo real:
+
+| Header | Descrição |
+| :--- | :--- |
+| `X-RateLimit-Limit` | O limite total de requisições permitidas na janela atual. |
+| `X-RateLimit-Remaining` | A quantidade de requisições restantes que você pode fazer antes de atingir o limite. |
+| `X-RateLimit-Reset` | O tempo (em formato Unix epoch ou contagem regressiva) para a janela de limites reiniciar. |
+
+Se a sua aplicação exceder os limites, a API retornará o status **`HTTP 429 Too Many Requests`** acompanhado do cabeçalho:
+*   `Retry-After`: Tempo em segundos que você precisa esperar antes de tentar fazer uma nova requisição.
+
+---
+
+## 💡 Boas Práticas
+
+- **Trate erros 429:** Garanta que sua aplicação escute o status `429` e implemente uma estratégia de *backoff exponencial* (esperar antes de tentar novamente).
+- **Monitore os Headers:** Use o cabeçalho `X-RateLimit-Remaining` para adaptar o ritmo de envio de requisições da sua aplicação.
+- **Cache de Dados:** Faça cache local de requisições de leitura que mudam raramente (como listagem de categorias ou produtos).

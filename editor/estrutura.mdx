@@ -1,0 +1,57 @@
+---
+title: "Estrutura de Arquivos"
+sidebarTitle: "Estrutura de Arquivos"
+icon: "folder-tree"
+description: "Entenda a organização dos diretórios e arquivos que compõem um tema da Nerix."
+---
+
+Todos os temas na Nerix seguem uma estrutura de pastas padronizada para separar os arquivos de layout, páginas específicas, componentes reutilizáveis e ativos estáticos.
+
+---
+
+## 📂 Visão Geral da Estrutura
+
+Ao baixar ou editar localmente um tema, você encontrará a seguinte estrutura de arquivos:
+
+```text
+├── assets/                  # Arquivos estáticos (imagens, CSS, JS, fontes)
+│   ├── css/
+│   │   └── main.css
+│   └── js/
+│       └── main.js
+├── components/              # Componentes reutilizáveis (Header, Footer, Cards)
+│   ├── header.html
+│   └── footer.html
+├── layouts/                 # Estruturas principais de página (Wrapper)
+│   └── theme.html
+├── pages/                   # Páginas individuais do e-commerce
+│   ├── home.html            # Página inicial da loja
+│   ├── product.html         # Página de detalhes de um produto
+│   ├── category.html        # Página de categoria de produtos
+│   ├── cart.html            # Página de visualização do carrinho
+│   └── checkout.html        # Página de fechamento de pedido
+├── schema.json              # Configurações dinâmicas do painel (Aparência)
+└── settings.json            # Configurações locais de sincronização (CLI)
+```
+
+---
+
+## 🔍 Descrição dos Diretórios
+
+### `/layouts`
+Contém o arquivo `theme.html`, que funciona como o "esqueleto" ou template base da sua loja. Ele envolve todo o conteúdo das páginas individuais. É aqui que você carrega suas tags `<head>`, folhas de estilo (CSS) e scripts (JS) globais.
+
+### `/pages`
+Armazena os arquivos HTML que representam cada rota da sua loja (ex.: `/pages/home.html` é renderizado ao acessar a raiz do site, `/pages/product.html` ao abrir um produto).
+
+### `/components`
+Diretório destinado a blocos HTML repetitivos que você deseja reaproveitar em múltiplos locais, como cabeçalhos, rodapés ou cards de produto. Eles podem ser inseridos em qualquer página usando a tag:
+```html
+{% include 'components/header.html' %}
+```
+
+### `/assets`
+Pasta pública onde ficam os arquivos de estilo, lógica de frontend vanilla, imagens institucionais ou fontes personalizadas.
+
+### `schema.json`
+Define os campos de personalização (cores, textos, banners) que o lojista poderá customizar de forma visual através do painel de **Aparência** da Nerix sem precisar mexer no código.

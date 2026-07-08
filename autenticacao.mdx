@@ -1,0 +1,30 @@
+---
+title: "Autenticação"
+sidebarTitle: "Autenticação"
+description: "Saiba como autenticar suas requisições na API pública da Nerix."
+---
+
+Para endpoints privados ou administrativos (como criação/exclusão de pacotes e listagem de todos os pedidos), você precisará fornecer uma chave de API válida associada à sua loja.
+
+## Header de Autenticação
+
+A autenticação é feita enviando a chave nos cabeçalhos da requisição (Headers):
+
+- **Header Name**: `X-nerixkey` (ou alternativamente `nerixkey`)
+- **Header Value**: Sua chave de API privada (ex: `nrk_live_...`)
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/orders' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+<Warning>
+  Mantenha sua chave de API sempre protegida. Nunca compartilhe a chave em ambientes públicos de frontend (como aplicações SPA ou templates estáticos) que possam ser acessados por usuários finais.
+</Warning>
+
+## Onde encontrar sua API Key?
+
+1. Acesse o painel de controle da sua loja na Nerix.
+2. Navegue até as **Configurações da API** / **Chaves de API**.
+3. Crie uma nova chave e copie-a. Ela só será exibida uma vez!

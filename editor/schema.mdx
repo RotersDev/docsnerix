@@ -1,0 +1,69 @@
+---
+title: "Schema de Configuração"
+sidebarTitle: "Schema de Configuração"
+icon: "sliders"
+description: "Saiba como criar campos de customização visual para o lojista no painel de Aparência da Nerix."
+---
+
+O arquivo `schema.json` é um dos recursos mais fantásticos do sistema de temas da Nerix. Ele permite que o desenvolvedor do tema crie painéis de controle visuais (com inputs de cores, textos, banners e toggles) para que o lojista customize a loja sem precisar programar.
+
+Qualquer alteração feita no painel pelo lojista fica acessível no tema através do objeto global `{{ settings.nome_da_opcao }}`.
+
+---
+
+## 📄 Exemplo de Estrutura do `schema.json`
+
+O arquivo deve ser criado na raiz do seu tema. Veja um exemplo estrutural básico:
+
+```json
+[
+  {
+    "name": "Cores Principais",
+    "settings": [
+      {
+        "id": "primary_color",
+        "type": "color",
+        "label": "Cor Primária da Loja",
+        "default": "#0091FF"
+      },
+      {
+        "id": "background_color",
+        "type": "color",
+        "label": "Cor do Fundo da Página",
+        "default": "#ffffff"
+      }
+    ]
+  },
+  {
+    "name": "Cabeçalho & Banners",
+    "settings": [
+      {
+        "id": "welcome_title",
+        "type": "text",
+        "label": "Título de Boas-Vindas",
+        "default": "Bem-vindo à nossa loja digital!"
+      },
+      {
+        "id": "show_announcement_bar",
+        "type": "checkbox",
+        "label": "Habilitar Barra de Anúncios",
+        "default": true
+      }
+    ]
+  }
+]
+```
+
+---
+
+## 🛠️ Tipos de Inputs Suportados
+
+Ao definir as configurações do seu tema no array `settings`, você pode usar os seguintes tipos de campos:
+
+| Tipo (`type`) | Descrição | Exemplo de Saída no HTML |
+|:---|:---|:---|
+| `text` | Campo de texto simples. | `{{ settings.welcome_title }}` |
+| `color` | Seletor de cores hexadecimal. | `{{ settings.primary_color }}` |
+| `checkbox` | Caixa de seleção (retorna `true` ou `false`). | `{% if settings.show_announcement_bar %}` |
+| `image` | Upload de imagem (retorna a URL da imagem upada). | `<img src="{{ settings.banner_image }}" />` |
+| `textarea` | Área de texto para blocos maiores ou scripts. | `{{ settings.footer_custom_text }}` |

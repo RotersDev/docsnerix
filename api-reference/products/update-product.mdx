@@ -1,0 +1,80 @@
+---
+title: "Atualizar Produto"
+api: "PUT /api/public/products/{id}"
+description: "Atualiza os dados de um produto existente pelo seu ID."
+---
+
+Modifica os campos de um produto já cadastrado. Envie **apenas os campos que deseja alterar** — campos não incluídos no body permanecem inalterados.
+
+## Parâmetros de Path
+
+<ParamField path="id" type="number" required>
+  ID único do produto a ser atualizado.
+</ParamField>
+
+## Corpo da Requisição
+
+Todos os campos são opcionais. Envie apenas o que deseja alterar.
+
+<ParamField body="name" type="string">
+  Novo nome do produto.
+</ParamField>
+
+<ParamField body="price" type="number">
+  Novo preço regular (em reais).
+</ParamField>
+
+<ParamField body="promotional_price" type="number">
+  Novo preço promocional. Envie `null` para remover o desconto ativo.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Nova descrição (suporta markdown).
+</ParamField>
+
+<ParamField body="category_id" type="number">
+  ID da nova categoria do produto.
+</ParamField>
+
+<ParamField body="active" type="boolean">
+  Se `false`, o produto é ocultado da loja pública.
+</ParamField>
+
+<ParamField body="infinite_stock" type="boolean">
+  Altera o modo de estoque do produto.
+</ParamField>
+
+<ParamField body="stock_limit" type="number">
+  Novo limite de estoque manual.
+</ParamField>
+
+<ParamField body="images" type="array">
+  Substitui as imagens do produto por novas URLs informadas.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request PUT \
+  --url 'https://api.nerix.com.br/api/public/products/12' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "price": 49.90,
+    "promotional_price": 39.90,
+    "active": true
+  }'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 12,
+  "name": "Minecraft Java & Bedrock Edition",
+  "price": "49.90",
+  "promotional_price": "39.90",
+  "active": true,
+  "updated_at": "2026-07-07T20:00:00.000Z"
+}
+```

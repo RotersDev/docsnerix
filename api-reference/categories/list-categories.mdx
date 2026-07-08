@@ -1,0 +1,50 @@
+---
+title: "Listar Categorias"
+api: "GET /api/public/categories"
+description: "Retorna as categorias ativas da sua loja."
+---
+
+Retorna uma lista de categorias da loja, ordenadas pela ordem de exibição definida no painel administrativo.
+
+## Parâmetros de Query
+
+<ParamField query="include_inactive" default="false" type="boolean">
+  Se `true`, inclui categorias inativas na listagem. **Observação: Requer autenticação via API Key para consultar categorias inativas.**
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/categories' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+[
+  {
+    "id": 3,
+    "name": "Jogos PC",
+    "slug": "jogos-pc",
+    "badge": "Mais Vendidos",
+    "image_url": "https://cdn.nerix.com.br/categories/jogos-pc.png",
+    "card_image_url": "https://cdn.nerix.com.br/categories/jogos-pc-card.png",
+    "active": true,
+    "products_count": 42,
+    "order": 1
+  },
+  {
+    "id": 4,
+    "name": "Gift Cards",
+    "slug": "gift-cards",
+    "badge": null,
+    "image_url": null,
+    "card_image_url": null,
+    "active": true,
+    "products_count": 15,
+    "order": 2
+  }
+]
+```

@@ -1,0 +1,118 @@
+---
+title: "Usar Meu Domínio"
+sidebarTitle: "Usar Meu Domínio"
+icon: "globe"
+description: "Configure um domínio personalizado para a sua loja Nerix com Cloudflare."
+---
+
+Você pode conectar qualquer domínio próprio à sua loja Nerix para vender com a sua marca (ex.: `loja.seusite.com.br` ou `www.seusite.com.br`).
+
+<Note>
+  Recomendamos usar o **Cloudflare** como DNS pois é gratuito, rápido e oferece SSL automático. Este tutorial usa o Cloudflare, mas qualquer provedor de DNS com suporte a CNAME funciona.
+</Note>
+
+---
+
+## Passo 1 — Comprar ou transferir seu domínio
+
+Se você ainda não tem um domínio, adquira em uma das registradoras abaixo:
+
+- [Registro.br](https://registro.br) — para domínios `.com.br` (R$ 40/ano aprox.)
+- [GoDaddy](https://godaddy.com) — para domínios `.com` internacionais
+- [Namecheap](https://namecheap.com) — opção econômica para `.com`
+
+---
+
+## Passo 2 — Criar conta no Cloudflare
+
+1. Acesse [cloudflare.com](https://cloudflare.com) e crie uma conta gratuita.
+2. Clique em **"Add a site"** (Adicionar site).
+3. Digite seu domínio (ex.: `seusite.com.br`) e clique em **Continue**.
+4. Selecione o plano **Free** e clique em **Continue**.
+
+---
+
+## Passo 3 — Apontar os nameservers para o Cloudflare
+
+Após adicionar o site, o Cloudflare mostrará **2 nameservers** específicos para você, como:
+
+```
+aria.ns.cloudflare.com
+bob.ns.cloudflare.com
+```
+
+**No painel da sua registradora (ex.: Registro.br):**
+
+1. Localize as configurações de **DNS / Nameservers** do seu domínio.
+2. Substitua os nameservers atuais pelos fornecidos pelo Cloudflare.
+3. Salve. A propagação pode levar de **5 minutos a 24 horas**.
+
+---
+
+## Passo 4 — Criar o registro CNAME no Cloudflare
+
+Agora você irá apontar seu domínio para a loja Nerix:
+
+1. No Cloudflare, acesse **DNS → Records**.
+2. Clique em **Add record**.
+3. Preencha:
+
+| Campo | Valor |
+|-------|-------|
+| **Type** | `CNAME` |
+| **Name** | `www` (ou `loja`, ou `@` para domínio raiz) |
+| **Target** | `stores.nerix.com.br` |
+| **Proxy status** | ✅ Proxied (nuvem laranja) |
+| **TTL** | Auto |
+
+4. Clique em **Save**.
+
+<Note>
+  Se quiser usar o domínio raiz (sem `www`), adicione também um registro `CNAME` com **Name** = `@` apontando para `stores.nerix.com.br`.
+</Note>
+
+---
+
+## Passo 5 — Configurar o domínio no painel Nerix
+
+1. Acesse [nerix.com.br](https://nerix.com.br) e faça login.
+2. Vá em **Configurações → Domínio Personalizado**.
+3. Digite o domínio completo que você configurou (ex.: `www.seusite.com.br`).
+4. Clique em **Verificar e Salvar**.
+5. A Nerix irá verificar o apontamento DNS. Assim que confirmado, sua loja estará acessível no seu domínio.
+
+---
+
+## Passo 6 — Ativar SSL (HTTPS)
+
+O Cloudflare ativa SSL automaticamente. Para garantir que tudo funcione:
+
+1. No Cloudflare, vá em **SSL/TLS → Overview**.
+2. Selecione o modo **"Full"** ou **"Flexible"**.
+3. Acesse **SSL/TLS → Edge Certificates** e ative:
+   - ✅ **Always Use HTTPS**
+   - ✅ **Automatic HTTPS Rewrites**
+
+---
+
+## Verificar a configuração
+
+Após todos os passos, acesse seu domínio no navegador. Você deve ver sua loja Nerix rodando no domínio personalizado com o cadeado de HTTPS ativo.
+
+<Warning>
+  Se o site não carregar, aguarde até 24 horas para a propagação DNS se completar. Você pode verificar o status em [whatsmydns.net](https://www.whatsmydns.net).
+</Warning>
+
+---
+
+## Solução de problemas
+
+**O domínio não conecta após 24h:**
+- Verifique se os nameservers foram salvos corretamente na registradora.
+- Confirme se o registro CNAME está com o **Target** correto: `stores.nerix.com.br`.
+
+**Aparece erro de certificado SSL:**
+- No Cloudflare, certifique-se de que o modo SSL está em **"Full"**, não em **"Off"**.
+
+**O domínio redireciona para outra página:**
+- Remova qualquer redirecionamento (redirect rules) configurado anteriormente no Cloudflare.

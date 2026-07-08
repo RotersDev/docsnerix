@@ -1,0 +1,63 @@
+---
+title: "Criar Cupom"
+api: "POST /api/public/coupons"
+description: "Cria um novo cupom de desconto para a sua loja."
+---
+
+Adiciona um novo cupom que pode ser usado pelos clientes na tela de checkout da loja.
+
+## Parâmetros do Corpo (JSON)
+
+<ParamField body="code" type="string" required>
+  Código do cupom (ex.: `CUPOM20`). Será convertido para letras maiúsculas automaticamente.
+</ParamField>
+
+<ParamField body="type" type="string" required>
+  Tipo de desconto. Opções: `percentage` (percentual) ou `fixed` (valor fixo).
+</ParamField>
+
+<ParamField body="value" type="number" required>
+  Valor do desconto. Se percentual, envie ex. `15` para 15%. Se fixo, envie o valor em reais (ex. `10.50`).
+</ParamField>
+
+<ParamField body="max_uses" type="number">
+  Limite máximo de vezes que o cupom pode ser utilizado.
+</ParamField>
+
+<ParamField body="expires_at" type="string">
+  Data de expiração do cupom em formato ISO 8601 (ex.: `2026-12-31T23:59:59.000Z`).
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/coupons' \
+  --header 'Content-Type: application/json' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --data '{
+    "code": "LAUNCH15",
+    "type": "percentage",
+    "value": 15,
+    "max_uses": 500,
+    "expires_at": "2026-08-31T23:59:00.000Z"
+  }'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 14,
+  "store_id": 1,
+  "code": "LAUNCH15",
+  "type": "percentage",
+  "value": 15,
+  "max_uses": 500,
+  "used_count": 0,
+  "status": "active",
+  "expires_at": "2026-08-31T23:59:00.000Z",
+  "updatedAt": "2026-07-08T03:13:00.000Z",
+  "createdAt": "2026-07-08T03:13:00.000Z"
+}
+```

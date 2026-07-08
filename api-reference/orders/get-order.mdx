@@ -1,0 +1,54 @@
+---
+title: "Buscar Pedido"
+api: "GET /api/public/orders/{orderNumber}"
+description: "Recupera os detalhes de um pedido específico pelo seu código único."
+---
+
+Retorna os dados detalhados de um pedido, incluindo produtos comprados, status, valores e status de pagamento.
+
+## Parâmetros de Path
+
+<ParamField path="orderNumber" type="string" required>
+  O código legível do pedido (ex: `NX-1054`).
+</ParamField>
+
+## Parâmetros de Query
+
+<ParamField query="email" type="string">
+  O e-mail do cliente correspondente ao pedido. Se enviado, a API validará se o e-mail coincide com o cadastrado no pedido antes de retornar os dados.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/orders/NX-1054?email=cliente@email.com' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 1054,
+  "order_number": "NX-1054",
+  "customer_email": "cliente@email.com",
+  "customer_name": "João da Silva",
+  "status": "delivered",
+  "payment_status": "paid",
+  "total": "59.80",
+  "payment_method": "pix",
+  "items": [
+    {
+      "id": 432,
+      "product_id": 12,
+      "name": "Minecraft Java & Bedrock Edition",
+      "quantity": 1,
+      "price": "59.80",
+      "product_key": "XXXX-XXXX-XXXX-XXXX"
+    }
+  ],
+  "created_at": "2026-07-07T18:00:00.000Z",
+  "paid_at": "2026-07-07T18:02:35.000Z"
+}
+```

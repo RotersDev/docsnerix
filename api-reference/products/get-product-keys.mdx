@@ -1,0 +1,93 @@
+---
+title: "Gerenciar Chaves/Estoque"
+api: "GET /api/public/products/{id}/keys"
+description: "Lista as chaves (códigos/licenças) associadas a um produto digital específico."
+---
+
+Retorna as chaves de estoque (licenças, códigos de ativação) associadas ao produto. Chaves são entregues automaticamente ao cliente após a confirmação do pagamento.
+
+## Parâmetros de Path
+
+<ParamField path="id" type="number" required>
+  ID único do produto.
+</ParamField>
+
+## Parâmetros de Query
+
+<ParamField query="all" default="false" type="boolean">
+  Se `true`, retorna todas as chaves (incluindo as já vendidas). Se `false`, retorna apenas as chaves disponíveis para venda.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/products/12/keys?all=false' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 201,
+      "key": "XXXX-YYYY-ZZZZ-AAAA",
+      "sold": false,
+      "created_at": "2026-07-01T10:00:00.000Z"
+    },
+    {
+      "id": 202,
+      "key": "BBBB-CCCC-DDDD-EEEE",
+      "sold": true,
+      "order_id": 1054,
+      "sold_at": "2026-07-07T18:00:00.000Z"
+    }
+  ],
+  "meta": {
+    "total": 100,
+    "available": 99,
+    "sold": 1
+  }
+}
+```
+
+---
+
+## Adicionar Chaves ao Estoque
+
+<api>POST /api/public/products/{id}/keys</api>
+
+Adiciona novas chaves/licenças ao estoque do produto. As chaves serão entregues automaticamente para os próximos compradores.
+
+### Corpo da Requisição
+
+<ParamField body="keys" type="array" required>
+  Lista de strings com as chaves a serem adicionadas (ex.: `["XXXX-YYYY-ZZZZ", "AAAA-BBBB-CCCC"]`).
+</ParamField>
+
+### Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/products/12/keys' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "keys": [
+      "KEY1-AAAA-BBBB-CCCC",
+      "KEY2-DDDD-EEEE-FFFF",
+      "KEY3-GGGG-HHHH-IIII"
+    ]
+  }'
+```
+
+### Exemplo de Resposta
+
+```json
+{
+  "added": 3,
+  "total_available": 102
+}
+```

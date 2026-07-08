@@ -1,0 +1,51 @@
+---
+title: "Listar Clientes"
+api: "GET /api/public/customers"
+description: "Retorna a listagem de clientes cadastrados na sua loja."
+---
+
+Retorna os clientes que já realizaram cadastro ou compras em sua loja associada à API Key.
+
+## Parâmetros de Query
+
+<ParamField query="email" type="string">
+  Filtra clientes cujo e-mail corresponde parcialmente ao termo de busca.
+</ParamField>
+
+<ParamField query="page" default="1" type="number">
+  Página de resultados a ser exibida.
+</ParamField>
+
+<ParamField query="limit" default="15" type="number">
+  Quantidade de itens por página.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/customers?page=1&limit=15' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 12,
+      "name": "Maria Souza",
+      "email": "mariasouza@gmail.com",
+      "phone": "+5511999998888",
+      "createdAt": "2026-07-07T12:30:00.000Z"
+    }
+  ],
+  "meta": {
+    "total": 54,
+    "page": 1,
+    "limit": 15,
+    "pages": 4
+  }
+}
+```

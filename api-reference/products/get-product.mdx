@@ -1,0 +1,55 @@
+---
+title: "Buscar Produto"
+api: "GET /api/public/products/{id}"
+description: "Busca os detalhes de um produto específico através do ID."
+---
+
+Busca um produto individual informando seu ID sequencial. Retorna todos os dados do produto, incluindo variantes, imagens e estoque atual.
+
+## Parâmetros de Path
+
+<ParamField path="id" type="number" required>
+  ID numérico único do produto (ex.: `12`).
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request GET \
+  --url 'https://api.nerix.com.br/api/public/products/12' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 12,
+  "name": "Minecraft Java & Bedrock Edition",
+  "slug": "minecraft-java-bedrock",
+  "price": "59.80",
+  "promotional_price": null,
+  "description": "Jogue em qualquer plataforma com uma única conta.",
+  "category_id": 3,
+  "infinite_stock": false,
+  "stock": 42,
+  "images": ["https://cdn.nerix.com.br/images/minecraft.png"],
+  "variants": [
+    {
+      "id": 5,
+      "name": "Deluxe Edition",
+      "price": "89.90",
+      "promotional_price": null
+    }
+  ],
+  "active": true,
+  "created_at": "2026-01-15T10:00:00.000Z"
+}
+```
+
+## Códigos de Erro
+
+| Código | Descrição |
+|--------|-----------|
+| `404` | Produto não encontrado para o ID informado. |
+| `401` | API Key inválida ou ausente (para produtos inativos). |

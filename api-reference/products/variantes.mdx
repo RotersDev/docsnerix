@@ -1,0 +1,68 @@
+---
+title: "Gerenciar Variantes"
+api: "POST /api/public/products/{id}/variants"
+description: "Cria uma nova variante associada ao produto pai."
+---
+
+Adiciona uma nova variante de compra (ex.: edições do jogo, adicionais) ao produto pai. Variantes permitem que o mesmo produto tenha preços e nomes diferentes para o cliente escolher no checkout.
+
+## Parâmetros de Path
+
+<ParamField path="id" type="number" required>
+  ID único do produto pai.
+</ParamField>
+
+## Corpo da Requisição
+
+<ParamField body="name" type="string" required>
+  Nome da variante (ex.: `Deluxe Edition`).
+</ParamField>
+
+<ParamField body="price" type="number" required>
+  Preço regular da variante (em reais).
+</ParamField>
+
+<ParamField body="promotional_price" type="number">
+  Preço promocional se ativo. Deve ser menor que `price`.
+</ParamField>
+
+<ParamField body="stock_limit" type="number">
+  Limite de estoque desta variante (independente do produto pai).
+</ParamField>
+
+<ParamField body="infinite_stock" default="false" type="boolean">
+  Se `true`, essa variante tem estoque ilimitado.
+</ParamField>
+
+## Exemplo de Requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.nerix.com.br/api/public/products/12/variants' \
+  --header 'X-nerixkey: SUA_CHAVE_AQUI' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Deluxe Edition",
+    "price": 89.90,
+    "promotional_price": 69.90,
+    "stock_limit": 50
+  }'
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "id": 5,
+  "product_id": 12,
+  "name": "Deluxe Edition",
+  "price": "89.90",
+  "promotional_price": "69.90",
+  "stock": 50,
+  "created_at": "2026-07-07T18:00:00.000Z"
+}
+```
+
+<Note>
+  Após criar variantes, o cliente verá um seletor no checkout para escolher qual edição deseja comprar.
+</Note>

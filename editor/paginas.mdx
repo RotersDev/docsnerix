@@ -1,0 +1,49 @@
+---
+title: "Páginas e Rotas"
+sidebarTitle: "Páginas e Rotas"
+icon: "file-lines"
+description: "Aprenda como funciona a estrutura de rotas e o mapeamento de arquivos em páginas na Nerix."
+---
+
+A Nerix conta com um sistema de roteamento baseado em arquivos dentro da pasta `/pages`. Cada rota acessada pelo cliente no site carrega um arquivo HTML específico do tema da loja.
+
+---
+
+## 🚦 Roteamento Padrão
+
+A tabela abaixo descreve qual arquivo é carregado pelo navegador para cada URL da loja:
+
+| Rota / URL | Arquivo Correspondente | Descrição |
+|:---|:---|:---|
+| `/` (Raiz) | `/pages/home.html` | Página inicial contendo banners, categorias e vitrines de produtos. |
+| `/product/:slug` | `/pages/product.html` | Página detalhada do produto, com fotos, descrição e botão de compra. |
+| `/category/:slug` | `/pages/category.html` | Listagem e filtros de produtos de uma determinada categoria. |
+| `/cart` | `/pages/cart.html` | Carrinho de compras com listagem dos itens escolhidos. |
+| `/checkout` | `/pages/checkout.html` | Checkout transparente e seguro para finalização do pagamento. |
+| `/orders/:id` | `/pages/order-status.html` | Tela de status do pedido do cliente (aprovado, pendente, chaves entregues). |
+
+---
+
+## 🏗️ Como as páginas são acopladas no Layout Base
+
+Por padrão, a engine da Nerix renderiza o arquivo `layouts/theme.html` como o layout base de todas as páginas. Dentro do seu `theme.html`, você deve inserir a tag `{{ content }}` na região onde deseja que as subpáginas de `/pages` sejam injetadas dinamicamente:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ store.name }}</title>
+</head>
+<body>
+    {% include 'components/header.html' %}
+
+    <main class="container">
+        <!-- O conteúdo de /pages/home.html, product.html, etc., será injetado aqui -->
+        {{ content }}
+    </main>
+
+    {% include 'components/footer.html' %}
+</body>
+</html>
+```
