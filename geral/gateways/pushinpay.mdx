@@ -1,0 +1,67 @@
+---
+title: "PushinPay"
+sidebarTitle: "PushinPay"
+icon: "bolt"
+description: "Configure a PushinPay na Nerix usando o token de API."
+---
+
+Use a PushinPay para receber PIX com aprovacao automatica na sua loja Nerix.
+
+<Info>
+  Antes de comecar, tenha acesso ao painel da PushinPay e permissao para visualizar ou gerar tokens de API.
+</Info>
+
+## O que voce vai precisar
+
+- Conta PushinPay ativa.
+- Token de API em ambiente de producao.
+- Acesso ao painel da Nerix.
+
+## Taxas e cadastro
+
+| Item | Valor |
+| --- | --- |
+| Taxa do gateway | R$ 0,35 |
+| Comissao Nerix | 3% |
+| Cadastro | [Criar conta PushinPay](https://pushinpay.com.br) |
+
+## Passo a passo
+
+<Steps>
+  <Step title="Acesse o painel da PushinPay">
+    Entre na conta PushinPay que vai receber os pagamentos da loja.
+
+    {/* Coloque aqui a imagem do passo 1: /images/gateways/pushinpay/passo-1-painel.png */}
+  </Step>
+  <Step title="Abra a area de API ou integracoes">
+    Procure pelo menu de integracoes, credenciais, API ou desenvolvedores.
+
+    {/* Coloque aqui a imagem do passo 2: /images/gateways/pushinpay/passo-2-integracoes.png */}
+  </Step>
+  <Step title="Copie o token de producao">
+    Copie o token usado para transacoes reais. Evite usar token sandbox em producao.
+
+    {/* Coloque aqui a imagem do passo 3: /images/gateways/pushinpay/passo-3-token.png */}
+  </Step>
+  <Step title="Cole o token na Nerix">
+    No painel da Nerix, acesse **Configuracoes -> Gateway de Pagamento**, escolha **PushinPay** e cole o token no campo solicitado.
+
+    {/* Coloque aqui a imagem do passo 4: /images/gateways/pushinpay/passo-4-nerix.png */}
+  </Step>
+  <Step title="Salve e faca um pedido de teste">
+    Ative o gateway, salve as alteracoes e crie um pedido para confirmar a aprovacao automatica.
+
+    {/* Coloque aqui a imagem do passo 5: /images/gateways/pushinpay/passo-5-teste.png */}
+  </Step>
+</Steps>
+
+## Checklist
+
+- Token colado sem espacos extras.
+- Gateway ativado na Nerix.
+- Pedido de teste aprovado automaticamente.
+- Status do pagamento igual no painel da Nerix e na PushinPay.
+
+<Warning>
+  Oculte parte do token antes de publicar qualquer print nesta pagina.
+</Warning>

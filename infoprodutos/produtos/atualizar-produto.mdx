@@ -1,0 +1,73 @@
+---
+title: "Atualizar produto"
+api: "PATCH /api/public/infoproducts/v1/products/{productId}"
+description: "Atualiza dados principais e configuracoes de checkout de um produto."
+---
+
+## Body
+
+Todos os campos sao opcionais.
+
+<ParamField body="name" type="string">
+  Nome do produto.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descricao do produto.
+</ParamField>
+
+<ParamField body="sales_page_url" type="string">
+  URL da pagina de vendas.
+</ParamField>
+
+<ParamField body="price" type="number">
+  Preco principal do produto.
+</ParamField>
+
+<ParamField body="promotional_price" type="number | null">
+  Preco promocional.
+</ParamField>
+
+<ParamField body="guarantee_days" type="number">
+  Dias de garantia.
+</ParamField>
+
+<ParamField body="support_email" type="string">
+  E-mail de suporte exibido no checkout.
+</ParamField>
+
+<ParamField body="producer_display_name" type="string">
+  Nome do produtor exibido no checkout.
+</ParamField>
+
+<ParamField body="builder_settings" type="object">
+  Configuracoes do checkout, como telefone, endereco, confirmacao de e-mail e marca Nerix.
+</ParamField>
+
+<ParamField body="builder_offers" type="array">
+  Lista completa de ofertas do produto. Use com cuidado: o envio substitui o conjunto atual.
+</ParamField>
+
+<ParamField body="is_active" type="boolean">
+  Ativa ou desativa o produto.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request PATCH \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/991122" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "price": 127,
+    "guarantee_days": 7,
+    "builder_settings": {
+      "collect_phone": true,
+      "phone_required": true,
+      "collect_address": false,
+      "require_email_confirmation": true,
+      "show_nerix_branding": true
+    }
+  }'
+```

@@ -1,133 +1,35 @@
 ---
 title: "Instalar o Aplicativo"
 sidebarTitle: "Instalar o Aplicativo"
-icon: "mobile-screen-button"
-description: "Adicione a Nerix à tela inicial do seu celular ou computador como um aplicativo."
+description: "Instale a Nerix no Android ou iPhone."
 ---
 
-A Nerix é uma **PWA (Progressive Web App)** — isso significa que você pode instalá-la diretamente pelo navegador, sem precisar baixar nada da App Store ou Google Play. Ela funciona como um app nativo: fica na sua tela inicial, abre em tela cheia e funciona de forma rápida.
+## Escolha seu dispositivo
 
-<CardGroup cols={2}>
-  <Card title="Android" icon="android">
-    Instale pelo Chrome em menos de 1 minuto.
-  </Card>
-  <Card title="iPhone / iPad" icon="apple">
-    Instale pelo Safari com alguns toques.
-  </Card>
-</CardGroup>
+<div className="my-6 flex flex-col gap-3">
+  <a href="/geral/app/android" className="group flex flex-col gap-4 rounded-lg border border-zinc-200/80 dark:border-zinc-800 bg-white/75 dark:bg-zinc-950/30 p-4 no-underline transition hover:border-blue-500/50 dark:hover:border-blue-500/40 hover:shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex items-center gap-4">
+      <div className="flex h-10 w-16 shrink-0 items-center justify-center text-emerald-500">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8">
+          <path d="M17.6 9.48l1.84-3.18a.5.5 0 10-.86-.5l-1.88 3.25A10.1 10.1 0 0012 8a10.1 10.1 0 00-4.7 1.05L5.42 5.8a.5.5 0 10-.86.5L6.4 9.48A8.38 8.38 0 003 16h18a8.38 8.38 0 00-3.4-6.52zM8 13.25a.75.75 0 110-1.5.75.75 0 010 1.5zm8 0a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+          <path d="M3 17h18v1.5A2.5 2.5 0 0118.5 21h-13A2.5 2.5 0 013 18.5V17z" />
+        </svg>
+      </div>
+      <div className="text-base font-semibold text-zinc-950 dark:text-zinc-100">Android</div>
+    </div>
+    <span className="inline-flex h-9 items-center rounded-md bg-blue-600 px-3 text-sm font-semibold text-white transition group-hover:bg-blue-500">Ver tutorial</span>
+  </a>
 
----
-
-## Instalar no Android (Chrome)
-
-<Steps>
-  <Step title="Abra o Chrome e acesse sua loja">
-    No Chrome do Android, acesse `nerix.com.br` ou o domínio da sua loja.
-  </Step>
-
-  <Step title="Toque no menu do navegador">
-    Toque nos **três pontos (⋮)** no canto superior direito da tela.
-  </Step>
-
-  <Step title="Selecione 'Adicionar à tela inicial'">
-    No menu que aparece, toque em **"Adicionar à tela inicial"** (ou "Install app" / "Instalar aplicativo").
-  </Step>
-
-  <Step title="Confirme a instalação">
-    Uma janela de confirmação aparecerá com o nome e ícone do app. Toque em **"Adicionar"** ou **"Instalar"**.
-  </Step>
-
-  <Step title="Pronto!">
-    O ícone da Nerix aparecerá na sua tela inicial. Toque nele para abrir o app em tela cheia, sem barra de endereço.
-  </Step>
-</Steps>
-
-<Note>
-  Em alguns dispositivos Android, pode aparecer uma notificação automática na parte inferior da tela perguntando se você quer instalar o app — basta tocar em **"Instalar"**.
-</Note>
-
----
-
-## Instalar no iPhone / iPad (Safari)
-
-<Steps>
-  <Step title="Abra o Safari e acesse sua loja">
-    No Safari do iPhone ou iPad, acesse `nerix.com.br` ou o domínio da sua loja.
-
-    <Warning>
-      Utilize **Safari** — outros navegadores no iOS (Chrome, Firefox) não suportam a instalação de PWA na tela inicial.
-    </Warning>
-  </Step>
-
-  <Step title="Toque no botão de Compartilhar">
-    Toque no ícone de **Compartilhar** (quadrado com seta para cima ↑) na barra inferior do Safari.
-  </Step>
-
-  <Step title="Role até 'Adicionar à Tela de Início'">
-    Role a lista de opções para baixo e toque em **"Adicionar à Tela de Início"** (Add to Home Screen).
-  </Step>
-
-  <Step title="Confirme o nome e adicione">
-    Você pode editar o nome do app se quiser. Depois, toque em **"Adicionar"** no canto superior direito.
-  </Step>
-
-  <Step title="Pronto!">
-    O ícone da Nerix aparecerá na sua tela inicial do iPhone/iPad. Toque para abrir em tela cheia como um app nativo.
-  </Step>
-</Steps>
-
----
-
-## Instalar no Computador (Chrome / Edge)
-
-Você também pode instalar a Nerix como um app no seu computador Windows, Mac ou Linux:
-
-<Steps>
-  <Step title="Abra o Chrome ou Edge e acesse sua loja">
-    Acesse `nerix.com.br` no Chrome ou Microsoft Edge.
-  </Step>
-
-  <Step title="Clique no ícone de instalação">
-    Na barra de endereços, clique no **ícone de instalar** (um monitor com seta para baixo ⬇️) que aparece no lado direito da barra.
-
-    Ou acesse pelo menu: clique nos **três pontos (⋮)** → **"Instalar Nerix..."** (ou "Install Nerix...").
-  </Step>
-
-  <Step title="Confirme a instalação">
-    Uma janela aparecerá perguntando se deseja instalar. Clique em **"Instalar"**.
-  </Step>
-
-  <Step title="Pronto!">
-    A Nerix abrirá em uma janela separada, sem a interface do navegador. Um atalho será criado na sua área de trabalho e no menu iniciar.
-  </Step>
-</Steps>
-
----
-
-## Vantagens de instalar como app
-
-| Recurso | Navegador | App (PWA) |
-|---------|-----------|-----------|
-| Ícone na tela inicial | ❌ | ✅ |
-| Tela cheia (sem barra do browser) | ❌ | ✅ |
-| Notificações push | ❌ | ✅ |
-| Carregamento mais rápido | Normal | ✅ Mais rápido |
-| Funciona offline (dados em cache) | ❌ | ✅ Parcial |
-
----
-
-## Perguntas frequentes
-
-**A Nerix está disponível na App Store ou Google Play?**
-Não. A Nerix é uma PWA instalada diretamente pelo navegador, sem necessidade de app store.
-
-**Ocupa espaço no celular?**
-Sim, mas muito pouco — geralmente menos de 5 MB, diferente de apps nativos que podem ocupar centenas de MB.
-
-**Funciona sem internet?**
-Algumas telas são exibidas em cache offline, mas a maioria das funcionalidades requer conexão com a internet.
-
-**Como desinstalar?**
-- **Android**: Pressione o ícone na tela inicial → "Desinstalar" ou "Remover".
-- **iPhone**: Pressione o ícone → "Remover app".
-- **PC**: Clique nos três pontos dentro do app → "Desinstalar Nerix".
+  <a href="/geral/app/iphone" className="group flex flex-col gap-4 rounded-lg border border-zinc-200/80 dark:border-zinc-800 bg-white/75 dark:bg-zinc-950/30 p-4 no-underline transition hover:border-blue-500/50 dark:hover:border-blue-500/40 hover:shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex items-center gap-4">
+      <div className="flex h-10 w-16 shrink-0 items-center justify-center text-zinc-900 dark:text-zinc-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8">
+          <path d="M16.37 1.43c0 1.02-.42 1.95-1.1 2.67-.72.76-1.9 1.35-2.85 1.27-.12-.98.35-2.01 1.02-2.73.72-.78 1.99-1.34 2.93-1.21z" />
+          <path d="M20.5 17.03c-.44 1.01-.66 1.46-1.22 2.36-.79 1.27-1.9 2.85-3.28 2.86-1.23.01-1.55-.83-3.22-.82-1.67.01-2.02.84-3.25.83-1.38-.01-2.43-1.44-3.22-2.71-2.2-3.55-2.43-7.72-1.07-9.94.96-1.57 2.48-2.49 3.91-2.49 1.46 0 2.38.84 3.59.84 1.17 0 1.89-.84 3.58-.84 1.28 0 2.64.7 3.6 1.91-3.16 1.73-2.65 6.25.58 8z" />
+        </svg>
+      </div>
+      <div className="text-base font-semibold text-zinc-950 dark:text-zinc-100">iPhone</div>
+    </div>
+    <span className="inline-flex h-9 items-center rounded-md bg-blue-600 px-3 text-sm font-semibold text-white transition group-hover:bg-blue-500">Ver tutorial</span>
+  </a>
+</div>

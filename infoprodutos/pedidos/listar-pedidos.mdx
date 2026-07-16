@@ -1,0 +1,50 @@
+---
+title: "Listar pedidos"
+api: "GET /api/public/infoproducts/v1/orders"
+description: "Lista pedidos relacionados aos produtos do workspace de Infoprodutos."
+---
+
+## Query params
+
+<ParamField query="page" type="number" default="1">
+  Pagina atual.
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade por pagina. Maximo: `100`.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders?page=1&limit=20" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 123,
+      "order_number": "019f3cbc-3db5-7445-b0f0-598baa2af6a0",
+      "status": "paid",
+      "payment_status": "paid",
+      "total": "10.00",
+      "customer_email": "cliente@exemplo.com",
+      "customer_name": "Cliente Teste",
+      "items": [],
+      "payment": {},
+      "customer": {}
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 9,
+    "total_pages": 1
+  }
+}
+```

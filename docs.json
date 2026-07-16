@@ -21,7 +21,8 @@
             "group": "Bem-vindo",
             "pages": [
               "visao-geral",
-              "suporte"
+              "suporte",
+              "atualizacoes"
             ]
           },
           {
@@ -132,6 +133,82 @@
                 "group": "Webhooks",
                 "pages": [
                   "api-reference/webhooks/order-approved"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Infoprodutos",
+        "icon": "credit-card",
+        "groups": [
+          {
+            "group": "Comecando",
+            "pages": [
+              "infoprodutos/visao-geral",
+              "infoprodutos/llms",
+              "infoprodutos/autenticacao",
+              "infoprodutos/regras-limites"
+            ]
+          },
+          {
+            "group": "API de Infoprodutos",
+            "pages": [
+              {
+                "group": "Produtos",
+                "pages": [
+                  "infoprodutos/produtos/listar-produtos",
+                  "infoprodutos/produtos/obter-produto",
+                  "infoprodutos/produtos/criar-produto",
+                  "infoprodutos/produtos/atualizar-produto"
+                ]
+              },
+              {
+                "group": "Ofertas",
+                "pages": [
+                  "infoprodutos/ofertas/listar-ofertas",
+                  "infoprodutos/ofertas/obter-oferta",
+                  "infoprodutos/ofertas/criar-oferta",
+                  "infoprodutos/ofertas/atualizar-oferta"
+                ]
+              },
+              {
+                "group": "Pagamentos",
+                "pages": [
+                  "infoprodutos/checkouts/criar-checkout"
+                ]
+              },
+              {
+                "group": "Pedidos",
+                "pages": [
+                  "infoprodutos/pedidos/listar-pedidos",
+                  "infoprodutos/pedidos/obter-pedido",
+                  "infoprodutos/pedidos/entrega-pedido"
+                ]
+              },
+              {
+                "group": "Clientes",
+                "pages": [
+                  "infoprodutos/clientes/listar-clientes"
+                ]
+              },
+              {
+                "group": "Cupons",
+                "pages": [
+                  "infoprodutos/cupons/cupons"
+                ]
+              },
+              {
+                "group": "Order Bumps",
+                "pages": [
+                  "infoprodutos/order-bumps/order-bumps"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "infoprodutos/webhooks/eventos"
                 ]
               }
             ]

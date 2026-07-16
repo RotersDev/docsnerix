@@ -1,0 +1,89 @@
+---
+title: "Regras e limites"
+description: "Boas praticas de uso, limites recomendados e tratamento de erros da API de Infoprodutos."
+---
+
+A API de Infoprodutos possui limite por API Key. Quando a requisicao nao envia uma chave valida, o limite e aplicado pelo IP de origem antes da autenticacao.
+
+## Limites recomendados
+
+Os limites abaixo sao aplicados em janelas de 1 minuto:
+
+| Tipo de chamada | Limite |
+| --- | ---: |
+| Consultas `GET` | ate 300 requisicoes por minuto |
+| Escritas `POST`, `PATCH` e `DELETE` | ate 60 requisicoes por minuto |
+| Criacao de pagamento Pix `POST /checkouts` | ate 30 requisicoes por minuto |
+| Consulta de pedidos apos criar pagamento | recomendado a cada 5 a 10 segundos por pedido |
+
+## Tamanho da requisicao
+
+O corpo JSON da API deve ficar abaixo de `10 MB`.
+
+## Tratamento de 429
+
+Quando o limite for excedido, a API retorna:
+
+```json
+{
+  "error": "Limite de requisicoes excedido para criacao de pagamentos Pix. Aguarde alguns segundos antes de tentar novamente.",
+  "retryAfter": 60
+}
+```
+
+Quando isso acontecer:
+
+1. Pare novas tentativas imediatamente.
+2. Aguarde o tempo indicado em `Retry-After`.
+3. Retente usando backoff exponencial.
+
+## Boas praticas
+
+- Nao crie o mesmo pagamento varias vezes para o mesmo cliente sem necessidade.
+- Salve o `order.order_number` retornado em `POST /checkouts`.
+- Reutilize os dados de produtos/ofertas em cache por alguns minutos.
+- Evite consultar pagamento em loop agressivo.
+- Para atualizacoes de status, prefira webhooks quando disponivel na conta.
+- Nunca exponha sua chave `nerix_builder_...` no frontend publico.
+
+## Erros comuns
+
+### Chave invalida
+
+```json
+{
+  "error": "API key de Infoprodutos invalida ou inativa"
+}
+```
+
+### Produto sem oferta ou checkout
+
+```json
+{
+  "error": "Oferta ou checkout nao encontrado"
+}
+```
+
+### Carteira Builder incompleta
+
+```json
+{
+  "error": "Cadastre seus dados na carteira Builder antes de vender."
+}
+```
+
+### Provedor Pix inativo na Carteira Builder
+
+```json
+{
+  "error": "Nenhum provedor Pix ativo na carteira. Ative um provedor Pix nas configuracoes da carteira antes de criar pagamentos."
+}
+```
+
+### Produto nao encontrado
+
+```json
+{
+  "error": "Produto nao encontrado"
+}
+```

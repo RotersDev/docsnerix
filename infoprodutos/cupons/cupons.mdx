@@ -1,0 +1,89 @@
+---
+title: "Cupons"
+api: "GET /api/public/infoproducts/v1/products/{productId}/coupons"
+description: "Lista, cria, atualiza e remove cupons vinculados a um produto."
+---
+
+## Listar cupons
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/coupons" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Criar cupom
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/coupons" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "code": "BEMVINDO10",
+    "type": "percentage",
+    "value": 10,
+    "usage_limit": 100,
+    "is_active": true,
+    "valid_until": "2026-12-31T23:59:59-03:00"
+  }'
+```
+
+## Atualizar cupom
+
+```bash
+curl --request PATCH \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/coupons/88" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "value": 15,
+    "is_active": true
+  }'
+```
+
+## Remover cupom
+
+```bash
+curl --request DELETE \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/coupons/88" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Campos aceitos
+
+<ParamField body="code" type="string" required>
+  Codigo do cupom. A plataforma salva em maiusculo.
+</ParamField>
+
+<ParamField body="type" type="string" default="percentage">
+  `percentage` para percentual ou `fixed` para valor fixo.
+</ParamField>
+
+<ParamField body="value" type="number" required>
+  Valor do desconto.
+</ParamField>
+
+<ParamField body="min_purchase" type="number">
+  Valor minimo de compra.
+</ParamField>
+
+<ParamField body="max_discount" type="number">
+  Desconto maximo quando o tipo for percentual.
+</ParamField>
+
+<ParamField body="usage_limit" type="number">
+  Limite total de usos.
+</ParamField>
+
+<ParamField body="is_secret" type="boolean">
+  Define se o cupom e secreto.
+</ParamField>
+
+<ParamField body="valid_from" type="string">
+  Data inicial em ISO 8601.
+</ParamField>
+
+<ParamField body="valid_until" type="string | null">
+  Data final em ISO 8601.
+</ParamField>

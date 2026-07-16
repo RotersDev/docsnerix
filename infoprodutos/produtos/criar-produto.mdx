@@ -1,0 +1,65 @@
+---
+title: "Criar produto"
+api: "POST /api/public/infoproducts/v1/products"
+description: "Cria um produto digital no Builder."
+---
+
+Ao criar um produto, a plataforma tambem cria a oferta padrao e um link de checkout inicial.
+
+## Body
+
+<ParamField body="name" type="string" required>
+  Nome do produto.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descricao do produto.
+</ParamField>
+
+<ParamField body="sales_page_url" type="string">
+  URL da pagina de vendas externa, se existir.
+</ParamField>
+
+<ParamField body="price" type="number" required>
+  Valor em reais. Exemplo: `97.00`.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "name": "Curso de Marketing Digital",
+    "description": "Acesso imediato ao curso completo.",
+    "sales_page_url": "https://seudominio.com/curso",
+    "price": 97
+  }'
+```
+
+## Resposta
+
+```json
+{
+  "id": 991122,
+  "name": "Curso de Marketing Digital",
+  "slug": "curso-de-marketing-digital",
+  "price": "97.00",
+  "is_active": true,
+  "is_digital": true,
+  "delivery_type": "instant",
+  "offers": [
+    {
+      "id": "827411",
+      "name": "Curso de Marketing Digital",
+      "price": 97,
+      "promotional_price": null,
+      "is_default": true,
+      "final_price": 97,
+      "checkout_url": "https://pay.nerix.com.br/a1b2c3d"
+    }
+  ]
+}
+```

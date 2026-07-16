@@ -1,0 +1,64 @@
+---
+title: "Listar produtos"
+api: "GET /api/public/infoproducts/v1/products"
+description: "Lista os produtos digitais do workspace de Infoprodutos."
+---
+
+Retorna os produtos do Builder vinculados ao dono da API Key.
+
+## Query params
+
+<ParamField query="search" type="string">
+  Filtra produtos pelo nome ou descricao.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products?search=curso" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "data": [
+    {
+      "id": 4146753,
+      "name": "+200 Mapas Mentais para aprender Frances",
+      "slug": "200-mapas-mentais-para-aprender-frances",
+      "description": "Material digital para estudo.",
+      "price": "10.00",
+      "is_active": true,
+      "is_digital": true,
+      "delivery_type": "instant",
+      "offers": [
+        {
+          "id": "577332",
+          "name": "Oferta Principal",
+          "price": 10,
+          "promotional_price": null,
+          "is_default": true,
+          "final_price": 10,
+          "checkout_slug": "z6qndhn",
+          "checkout_url": "https://pay.nerix.com.br/z6qndhn"
+        }
+      ],
+      "checkout_links": [
+        {
+          "id": 123,
+          "name": "Oferta Principal",
+          "slug": "z6qndhn",
+          "url": "https://pay.nerix.com.br/z6qndhn",
+          "offer_id": "577332",
+          "offer_name": "Oferta Principal",
+          "offer_price": 10,
+          "is_default": true
+        }
+      ]
+    }
+  ]
+}
+```

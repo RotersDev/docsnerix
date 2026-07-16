@@ -1,0 +1,138 @@
+---
+title: "Criar pagamento Pix"
+api: "POST /api/public/infoproducts/v1/checkouts"
+description: "Cria um pedido, gera a cobranca Pix e retorna o Pix copia e cola."
+---
+
+Este e o endpoint usado para **gerar pagamento** na API de Infoprodutos.
+
+Ele cria o pedido, gera a cobranca Pix e retorna os dados que voce precisa para exibir o pagamento no seu sistema:
+
+- `payment.qr_code`: Pix copia e cola.
+- `payment.qr_code_base64`: imagem do QR Code em Base64 quando o provedor retornar imagem pronta.
+- `payment.expiration_date`: data de expiracao da cobranca.
+- `order.order_number`: numero do pedido para consultar depois.
+
+<Note>
+  Mesmo o endpoint se chamando `/checkouts`, ele e o endpoint de criacao de pagamento Pix da API de Infoprodutos.
+</Note>
+
+<Warning>
+  Antes de chamar este endpoint, confirme que a oferta retornou `checkout_url`. Ofertas sem `checkout_url` ainda nao possuem checkout publico associado.
+</Warning>
+
+<Warning>
+  A conta precisa ter um provedor Pix ativo na Carteira Builder. Se nao houver provedor ativo, a API retorna erro informando que nenhum provedor de pagamento Pix esta ativo.
+</Warning>
+
+## Body
+
+<ParamField body="product_id" type="string | number" required>
+  ID do produto do Builder.
+</ParamField>
+
+<ParamField body="offer_id" type="string" required>
+  ID da oferta. Use o valor retornado em `offers[].id`. A oferta deve ter `checkout_url`.
+</ParamField>
+
+<ParamField body="quantity" type="number" default="1">
+  Quantidade do produto.
+</ParamField>
+
+<ParamField body="customer" type="object" required>
+  Dados do comprador.
+</ParamField>
+
+<ParamField body="customer.email" type="string" required>
+  E-mail do comprador.
+</ParamField>
+
+<ParamField body="customer.name" type="string">
+  Nome do comprador.
+</ParamField>
+
+<ParamField body="customer.document" type="string">
+  CPF ou CNPJ do comprador, quando exigido pelo checkout/provedor.
+</ParamField>
+
+<ParamField body="customer.phone" type="string">
+  Telefone do comprador.
+</ParamField>
+
+<ParamField body="coupon_code" type="string">
+  Cupom que deve ser aplicado no checkout.
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  Metadados livres para rastreamento externo. Tambem pode ser enviado como `tracking_data`.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/checkouts" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "product_id": 4146753,
+    "offer_id": "577332",
+    "quantity": 1,
+    "customer": {
+      "email": "cliente@exemplo.com",
+      "name": "Cliente Teste",
+      "document": "11144477735",
+      "phone": "41999999999"
+    },
+    "metadata": {
+      "utm_source": "api",
+      "external_id": "lead_123"
+    }
+  }'
+```
+
+## Resposta real validada
+
+```json
+{
+  "order": {
+    "id": 2051569,
+    "order_number": "019f688d-a5e0-7451-a01a-66c5deef534b",
+    "status": "pending",
+    "payment_status": "pending",
+    "total": "10.00",
+    "customer_email": "cliente@exemplo.com",
+    "payment_method": "pix"
+  },
+  "payment": {
+    "status": "pending",
+    "qr_code": "000201...",
+    "qr_code_base64": null,
+    "expiration_date": "2026-07-15T23:00:00.000Z"
+  }
+}
+```
+
+## Pix copia e cola
+
+Use `payment.qr_code` como Pix copia e cola. Quando `payment.qr_code_base64` vier preenchido, ele pode ser usado para exibir imagem pronta do QR Code; caso contrario, gere a imagem no seu frontend a partir do copia e cola.
+
+## Exibindo QR Code
+
+Se `payment.qr_code_base64` retornar preenchido:
+
+```html
+<img src="data:image/png;base64,BASE64_RETORNADO_AQUI" alt="QR Code Pix" />
+```
+
+Se `payment.qr_code_base64` vier `null`, use `payment.qr_code` para gerar o QR Code no frontend com uma biblioteca de QR Code.
+
+## Consultar o pagamento depois
+
+Depois de criar o pagamento, use o numero retornado em `order.order_number`:
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders/019f688d-a5e0-7451-a01a-66c5deef534b" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```

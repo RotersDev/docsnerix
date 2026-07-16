@@ -1,0 +1,81 @@
+---
+title: "Order bumps"
+api: "GET /api/public/infoproducts/v1/products/{productId}/order-bumps"
+description: "Gerencia ofertas adicionais exibidas no checkout do produto."
+---
+
+## Listar order bumps
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/order-bumps" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Criar order bump
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/order-bumps" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "offer_product_id": 991122,
+    "builder_offer_id": "882173",
+    "title": "Adicione o pack premium",
+    "description": "Receba tambem os modelos extras.",
+    "cta": "Adicionar ao pedido",
+    "custom_price": 27,
+    "show_image": true
+  }'
+```
+
+## Reordenar order bumps
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/order-bumps/reorder" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "bump_ids": [12, 10, 11]
+  }'
+```
+
+## Remover order bump
+
+```bash
+curl --request DELETE \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/products/4146753/order-bumps/12" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Campos aceitos
+
+<ParamField body="offer_product_id" type="number" required>
+  Produto que sera ofertado como adicional.
+</ParamField>
+
+<ParamField body="builder_offer_id" type="string">
+  Oferta especifica do produto adicional.
+</ParamField>
+
+<ParamField body="title" type="string">
+  Titulo exibido no checkout.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descricao curta do adicional.
+</ParamField>
+
+<ParamField body="cta" type="string">
+  Texto do botao ou chamada.
+</ParamField>
+
+<ParamField body="custom_price" type="number">
+  Preco personalizado para o adicional.
+</ParamField>
+
+<ParamField body="show_image" type="boolean">
+  Define se a imagem do produto adicional aparece no checkout.
+</ParamField>

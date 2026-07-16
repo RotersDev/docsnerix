@@ -1,0 +1,55 @@
+---
+title: "Autenticacao"
+api: "GET /api/public/infoproducts/v1/me"
+description: "Como autenticar chamadas da API de Infoprodutos."
+---
+
+A API de Infoprodutos usa uma chave iniciada por `nerix_builder_`. Ela e diferente da API Key da Vitrine.
+
+## Headers aceitos
+
+Use uma das formas abaixo:
+
+```bash
+Authorization: Bearer nerix_builder_SUA_CHAVE
+```
+
+ou:
+
+```bash
+x-nerix-builder-key: nerix_builder_SUA_CHAVE
+```
+
+Tambem e aceito `x-builder-api-key`.
+
+## Validar chave
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/me" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "user_id": 3,
+  "scope": "infoproducts",
+  "key_id": 4
+}
+```
+
+## Erros comuns
+
+```json
+{
+  "error": "API key de Infoprodutos obrigatoria"
+}
+```
+
+```json
+{
+  "error": "API key de Infoprodutos invalida ou inativa"
+}
+```

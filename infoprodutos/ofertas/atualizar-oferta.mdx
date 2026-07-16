@@ -1,0 +1,37 @@
+---
+title: "Atualizar oferta"
+api: "PATCH /api/public/infoproducts/v1/offers/{offerId}"
+description: "Atualiza nome, preco e status padrao de uma oferta."
+---
+
+## Body
+
+<ParamField body="name" type="string">
+  Nome da oferta.
+</ParamField>
+
+<ParamField body="price" type="number">
+  Preco principal.
+</ParamField>
+
+<ParamField body="promotional_price" type="number | null">
+  Preco promocional.
+</ParamField>
+
+<ParamField body="is_default" type="boolean">
+  Define se a oferta deve ser a padrao.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request PATCH \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/offers/882173" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "name": "Oferta Especial",
+    "price": 197,
+    "promotional_price": 127
+  }'
+```

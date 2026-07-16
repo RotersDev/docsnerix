@@ -1,0 +1,46 @@
+---
+title: "Webhooks"
+description: "Eventos recomendados para acompanhar vendas de infoprodutos."
+---
+
+A API publica de Infoprodutos cria pedidos usando o fluxo oficial da Nerix. Para receber atualizacoes automaticamente, configure webhooks no painel do Builder quando disponivel para sua conta.
+
+## Eventos mais importantes
+
+- `order.created`: pedido criado.
+- `order.approved`: pagamento aprovado.
+- `order.cancelled`: pedido cancelado.
+- `purchase_refused`: pagamento recusado.
+- `checkout_abandoned`: abandono de checkout.
+- `chargeback`: contestacao/chargeback.
+- `refund`: reembolso.
+
+## Exemplo de payload
+
+```json
+{
+  "event": "order.approved",
+  "created_at": "2026-07-15T21:00:00.000Z",
+  "data": {
+    "order_number": "019f3cbc-3db5-7445-b0f0-598baa2af6a0",
+    "status": "paid",
+    "payment_status": "paid",
+    "total": "10.00",
+    "customer": {
+      "email": "cliente@exemplo.com",
+      "name": "Cliente Teste"
+    },
+    "items": [
+      {
+        "product_id": 4146753,
+        "product_name": "+200 Mapas Mentais para aprender Frances",
+        "quantity": 1
+      }
+    ]
+  }
+}
+```
+
+<Note>
+  A lista exata de eventos liberados pode variar conforme as integracoes ativas no Builder. Use sempre os eventos exibidos no painel da sua conta.
+</Note>

@@ -1,0 +1,54 @@
+---
+title: "Visao geral"
+description: "API publica para vender infoprodutos, cursos, arquivos digitais e ofertas do Builder."
+---
+
+A API de Infoprodutos permite integrar produtos do Builder com sistemas externos, criar checkouts Pix, consultar pedidos, clientes, cupons e entregas.
+
+<CardGroup cols={2}>
+  <Card title="Base URL" icon="globe">
+    `https://api.nerix.com.br/api/public/infoproducts/v1`
+  </Card>
+  <Card title="Checkout publico" icon="link">
+    Os links de checkout usam `https://pay.nerix.com.br/{slug}`.
+  </Card>
+</CardGroup>
+
+## O que existe hoje
+
+- Autenticacao por API Key de Infoprodutos.
+- Produtos digitais do Builder.
+- Ofertas vinculadas ao produto.
+- Links de checkout por oferta.
+- Criacao de checkout/cobranca Pix.
+- Listagem e consulta de pedidos.
+- Consulta de entrega enviada ao comprador.
+- Clientes consolidados por e-mail.
+- Cupons vinculados ao produto.
+- Order bumps vinculados ao produto.
+
+## Fluxo recomendado
+
+1. Liste ou crie um produto.
+2. Liste ou crie uma oferta para esse produto.
+3. Use `POST /checkouts` com `product_id`, `offer_id` e os dados do cliente.
+4. Mostre o `payment.qr_code` para pagamento Pix copia e cola.
+5. Consulte o pedido por `order_number` ou use webhooks da plataforma para receber atualizacoes.
+
+## Formato padrao
+
+As respostas de lista usam o formato:
+
+```json
+{
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 0,
+    "total_pages": 1
+  }
+}
+```
+
+Nem todos os endpoints possuem paginacao. Endpoints de produtos, ofertas, cupons e order bumps retornam `data` com a lista correspondente.

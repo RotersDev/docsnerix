@@ -1,178 +1,224 @@
-/* Custom Styles for Nerix Documentation Header & Search Bar */
+/* Nerix docs: polished header and search */
+:root {
+  --nerix-blue: #0091ff;
+  --nerix-blue-strong: #006dff;
+  --nerix-line: rgba(15, 23, 42, 0.1);
+  --nerix-text: #172033;
+  --nerix-muted: #64748b;
+}
 
-/* Ajuste de espaçamento para reduzir o gap excessivo entre os botões do cabeçalho */
+html.dark {
+  --nerix-line: rgba(255, 255, 255, 0.1);
+  --nerix-text: #f8fafc;
+  --nerix-muted: #a5b4c7;
+}
+
+/* Header shell */
+#navbar,
+#topbar {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border-bottom: 1px solid var(--nerix-line) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 14px 36px rgba(15, 23, 42, 0.06) !important;
+  backdrop-filter: blur(18px) saturate(1.25) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
+}
+
+html.dark #navbar,
+html.dark #topbar {
+  background: rgba(10, 10, 10, 0.78) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 42px rgba(0, 0, 0, 0.28) !important;
+}
+
 header nav ul.flex {
-  gap: 10px !important;
-  column-gap: 10px !important;
   display: flex !important;
   align-items: center !important;
+  gap: 6px !important;
+  column-gap: 6px !important;
 }
 
 header nav ul.flex li {
-  margin: 0 !important; /* Remove o espaçamento forçado do space-x-6 padrão */
+  margin: 0 !important;
 }
 
-/* Estilo Base Unificado para os botões do cabeçalho */
-#topbar-cta-button a,
-.navbar-link a,
-header nav a {
-  font-weight: 600 !important;
-  border-radius: 10px !important;
-  padding: 8px 18px !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 38px !important;
-  box-sizing: border-box !important;
-  font-size: 14px !important;
-  letter-spacing: 0.1px !important;
+/* Page title area */
+main #header,
+#content-area > #header {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-/* ==================== TEMA ESCURO (DARK MODE) ==================== */
-html.dark .navbar-link a,
-html.dark header nav a:not(.text-primary) {
-  background: linear-gradient(135deg, #0d121f 0%, #020408 100%) !important;
-  color: #cbd5e1 !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+/* Logo */
+.nav-logo,
+header img[alt*="logo" i],
+header img[src*="iconenome"] {
+  height: 30px !important;
+  max-height: 30px !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
-html.dark .navbar-link a:hover,
-html.dark header nav a:not(.text-primary):hover {
-  background: linear-gradient(135deg, #1c2638 0%, #090d14 100%) !important;
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35) !important;
-}
-
-/* ==================== TEMA CLARO (LIGHT MODE) ==================== */
-html:not(.dark) .navbar-link a,
-html:not(.dark) header nav a:not(.text-primary) {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
-  color: #475569 !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
-}
-
-html:not(.dark) .navbar-link a:hover,
-html:not(.dark) header nav a:not(.text-primary):hover {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
-  color: #0f172a !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ==================== BOTÃO PRINCIPAL (PAINEL DA LOJA - CTA) ==================== */
-#topbar-cta-button a {
-  background: linear-gradient(135deg, #0091FF 0%, #0052D4 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(0, 145, 255, 0.3) !important;
-  box-shadow: 0 4px 14px rgba(0, 145, 255, 0.3) !important;
-}
-
-#topbar-cta-button a:hover {
-  background: linear-gradient(135deg, #00a2ff 0%, #0066ff 100%) !important;
-  color: #ffffff !important;
-  border-color: rgba(0, 145, 255, 0.5) !important;
-  box-shadow: 0 6px 20px rgba(0, 145, 255, 0.45) !important;
+.nav-logo:hover,
+header img[src*="iconenome"]:hover {
+  opacity: 0.92 !important;
   transform: translateY(-1px) !important;
 }
 
-/* Ocultar a setinha padrão do Mintlify */
+/* Navigation links */
+.navbar-link a,
+header nav a:not([href*="nerix.com.br"]) {
+  height: 36px !important;
+  padding: 0 12px !important;
+  border: 1px solid transparent !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: var(--nerix-muted) !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease !important;
+}
+
+.navbar-link a:hover,
+header nav a:not([href*="nerix.com.br"]):hover {
+  background: rgba(0, 145, 255, 0.08) !important;
+  border-color: rgba(0, 145, 255, 0.16) !important;
+  color: var(--nerix-text) !important;
+}
+
+html.dark .navbar-link a:hover,
+html.dark header nav a:not([href*="nerix.com.br"]):hover {
+  background: rgba(0, 145, 255, 0.14) !important;
+  border-color: rgba(0, 145, 255, 0.24) !important;
+}
+
+/* Primary CTA */
+#topbar-cta-button a {
+  height: 38px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(0, 145, 255, 0.55) !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, var(--nerix-blue), var(--nerix-blue-strong)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(0, 145, 255, 0.24) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+}
+
+#topbar-cta-button a:hover {
+  color: #ffffff !important;
+  filter: brightness(1.06) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 14px 30px rgba(0, 145, 255, 0.34) !important;
+}
+
 #topbar-cta-button a svg {
   display: none !important;
 }
 
-/* Forçar a exibição correta do texto interno */
 #topbar-cta-button a span,
 #topbar-cta-button a div {
-  display: inline-flex !important;
-  align-items: center !important;
   color: #ffffff !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 
-/* ==================== INJEÇÃO DE ÍCONES (APENAS CABEÇALHO) ==================== */
+/* Header icons */
+.navbar-link a[href*="wa.me"]::before,
+.navbar-link a[href*="whatsapp"]::before,
+header nav a[href*="wa.me"]::before,
+header nav a[href*="whatsapp"]::before,
+.navbar-link a[href*="discord.gg"]::before,
+.navbar-link a[href*="discord.com"]::before,
+header nav a[href*="discord.gg"]::before,
+header nav a[href*="discord.com"]::before,
+#topbar-cta-button a::before {
+  content: "" !important;
+  width: 15px !important;
+  height: 15px !important;
+  margin-right: 0 !important;
+  display: inline-block !important;
+  flex: 0 0 15px !important;
+  background-color: currentColor !important;
+}
 
-/* Ícone de WhatsApp para o link de Suporte (Apenas no Header) */
 .navbar-link a[href*="wa.me"]::before,
 .navbar-link a[href*="whatsapp"]::before,
 header nav a[href*="wa.me"]::before,
 header nav a[href*="whatsapp"]::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: 16px !important;
-  height: 16px !important;
-  margin-right: 8px !important;
-  background-color: currentColor !important;
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.949h.004c4.368 0 7.927-3.562 7.928-7.929a7.89 7.89 0 0 0-2.325-5.692zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.69-4.98c-.202-.101-1.194-.588-1.378-.654-.185-.067-.32-.1-.452.1-.132.2-.508.64-.624.773-.117.132-.234.148-.436.047a5.084 5.084 0 0 1-1.616-1.002 5.277 5.277 0 0 1-1.117-1.392c-.118-.202-.013-.311.088-.413.09-.092.201-.233.301-.35.1-.117.135-.198.203-.33.067-.132.033-.249-.017-.35-.05-.101-.452-1.09-.62-1.49-.163-.395-.343-.341-.452-.347-.116-.006-.25-.008-.383-.008a.78.78 0 0 0-.56.262c-.19.202-.727.712-.727 1.737 0 1.025.746 2.01 1.01 2.37.264.36 1.468 2.242 3.557 3.14.496.214.883.342 1.185.438.502.158.96.136 1.32.083.402-.06 1.194-.488 1.361-.958.168-.47.168-.875.118-.958-.05-.083-.185-.132-.387-.233z'/></svg>") no-repeat center/contain !important;
-  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.949h.004c4.368 0 7.927-3.562 7.928-7.929a7.89 7.89 0 0 0-2.325-5.692zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.69-4.98c-.202-.101-1.194-.588-1.378-.654-.185-.067-.32-.1-.452.1-.132.2-.508.64-.624.773-.117.132-.234.148-.436.047a5.084 5.084 0 0 1-1.616-1.002 5.277 5.277 0 0 1-1.117-1.392c-.118-.202-.013-.311.088-.413.09-.092.201-.233.301-.35.1-.117.135-.198.203-.33.067-.132.033-.249-.017-.35-.05-.101-.452-1.09-.62-1.49-.163-.395-.343-.341-.452-.347-.116-.006-.25-.008-.383-.008a.78.78 0 0 0-.56.262c-.19.202-.727.712-.727 1.737 0 1.025.746 2.01 1.01 2.37.264.36 1.468 2.242 3.557 3.14.496.214.883.342 1.185.438.502.158.96.136 1.32.083.402-.06 1.194-.488 1.361-.958.168-.47.168-.875.118-.958-.05-.083-.185-.132-.387-.233z'/></svg>") no-repeat center/contain !important;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.6 2.3A7.9 7.9 0 0 0 8 0C3.6 0 .1 3.6.1 7.9c0 1.4.4 2.8 1.1 4L0 16l4.2-1.1A7.9 7.9 0 0 0 8 15.8c4.4 0 7.9-3.6 7.9-7.9 0-2.1-.8-4.1-2.3-5.6zM8 14.5c-1.2 0-2.3-.3-3.4-.9l-.2-.1-2.5.7.7-2.4-.2-.3a6.6 6.6 0 0 1-1-3.5A6.6 6.6 0 0 1 8 1.3a6.6 6.6 0 0 1 0 13.2zm3.7-5c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1l-.6.8c-.1.1-.2.1-.4 0-.2-.1-.9-.3-1.6-1-.6-.5-.9-1.1-1.1-1.4-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1 0-.3 0-.4l-.6-1.5c-.2-.4-.3-.3-.5-.3h-.4c-.1 0-.4.1-.6.3-.2.2-.7.7-.7 1.7s.7 2 1 2.4c.3.4 1.5 2.2 3.6 3.1.5.2.9.3 1.2.4.5.2 1 .1 1.3.1.4-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3z'/></svg>") no-repeat center/contain !important;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.6 2.3A7.9 7.9 0 0 0 8 0C3.6 0 .1 3.6.1 7.9c0 1.4.4 2.8 1.1 4L0 16l4.2-1.1A7.9 7.9 0 0 0 8 15.8c4.4 0 7.9-3.6 7.9-7.9 0-2.1-.8-4.1-2.3-5.6zM8 14.5c-1.2 0-2.3-.3-3.4-.9l-.2-.1-2.5.7.7-2.4-.2-.3a6.6 6.6 0 0 1-1-3.5A6.6 6.6 0 0 1 8 1.3a6.6 6.6 0 0 1 0 13.2zm3.7-5c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1l-.6.8c-.1.1-.2.1-.4 0-.2-.1-.9-.3-1.6-1-.6-.5-.9-1.1-1.1-1.4-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1 0-.3 0-.4l-.6-1.5c-.2-.4-.3-.3-.5-.3h-.4c-.1 0-.4.1-.6.3-.2.2-.7.7-.7 1.7s.7 2 1 2.4c.3.4 1.5 2.2 3.6 3.1.5.2.9.3 1.2.4.5.2 1 .1 1.3.1.4-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1-.1-.1-.2-.2-.4-.3z'/></svg>") no-repeat center/contain !important;
 }
 
-/* Ícone de Discord para o link do Discord (Apenas no Header) */
 .navbar-link a[href*="discord.gg"]::before,
 .navbar-link a[href*="discord.com"]::before,
 header nav a[href*="discord.gg"]::before,
 header nav a[href*="discord.com"]::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: 16px !important;
-  height: 16px !important;
-  margin-right: 8px !important;
-  background-color: currentColor !important;
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.545 2.907a13.222 13.222 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.575-.407.837a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.837.052.052 0 0 0-.052-.025 13.018 13.018 0 0 0-3.258 1.011.05.05 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.277 13.277 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.026-.07 9.094 9.094 0 0 1-1.248-.595.05.05 0 0 1-.005-.085c.085-.063.169-.129.25-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.25.196a.05.05 0 0 1-.006.085 8.278 8.278 0 0 1-1.248.595.05.05 0 0 0-.026.07c.23.469.508.913.82 1.33a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.23-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z'/></svg>") no-repeat center/contain !important;
-  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.545 2.907a13.222 13.222 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.575-.407.837a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.837.052.052 0 0 0-.052-.025 13.018 13.018 0 0 0-3.258 1.011.05.05 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.277 13.277 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.026-.07 9.094 9.094 0 0 1-1.248-.595.05.05 0 0 1-.005-.085c.085-.063.169-.129.25-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.25.196a.05.05 0 0 1-.006.085 8.278 8.278 0 0 1-1.248.595.05.05 0 0 0-.026.07c.23.469.508.913.82 1.33a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.23-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z'/></svg>") no-repeat center/contain !important;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.5 2.9c-1-.5-2.1-.8-3.3-1-.1.2-.3.6-.4.8a12.2 12.2 0 0 0-3.6 0c-.1-.3-.3-.6-.4-.8-1.2.2-2.3.5-3.3 1C.4 6-.2 9 .1 12c1.2.9 2.5 1.6 4 2 .3-.4.6-.9.8-1.3-.4-.2-.8-.4-1.2-.6.1-.1.2-.1.3-.2 2.6 1.2 5.4 1.2 8 0 .1.1.2.1.3.2-.4.2-.8.4-1.2.6.2.5.5.9.8 1.3 1.5-.5 2.8-1.2 4-2 .3-3.5-.2-6.4-2.4-9.1zM5.3 10.2c-.8 0-1.4-.7-1.4-1.6S4.5 7 5.3 7s1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6zm5.4 0c-.8 0-1.4-.7-1.4-1.6S9.9 7 10.7 7s1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6z'/></svg>") no-repeat center/contain !important;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M13.5 2.9c-1-.5-2.1-.8-3.3-1-.1.2-.3.6-.4.8a12.2 12.2 0 0 0-3.6 0c-.1-.3-.3-.6-.4-.8-1.2.2-2.3.5-3.3 1C.4 6-.2 9 .1 12c1.2.9 2.5 1.6 4 2 .3-.4.6-.9.8-1.3-.4-.2-.8-.4-1.2-.6.1-.1.2-.1.3-.2 2.6 1.2 5.4 1.2 8 0 .1.1.2.1.3.2-.4.2-.8.4-1.2.6.2.5.5.9.8 1.3 1.5-.5 2.8-1.2 4-2 .3-3.5-.2-6.4-2.4-9.1zM5.3 10.2c-.8 0-1.4-.7-1.4-1.6S4.5 7 5.3 7s1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6zm5.4 0c-.8 0-1.4-.7-1.4-1.6S9.9 7 10.7 7s1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6z'/></svg>") no-repeat center/contain !important;
 }
 
-/* Ícone de Loja (Apenas no Header) */
 #topbar-cta-button a::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: 15px !important;
-  height: 15px !important;
-  margin-right: 8px !important;
-  background-color: currentColor !important;
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.855a2.5 2.5 0 0 1-2.5 2.5h-.09a2.5 2.5 0 0 1-2.44-2.056 2.5 2.5 0 0 1-3.94 0 2.5 2.5 0 0 1-2.44 2.056h-.09A2.5 2.5 0 0 1 0 6.225v-.855a1.5 1.5 0 0 1 .36-1.026L2.97 1.35zM8 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4.843-.763a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-9.686 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1.5 8.97V14.5A1.5 1.5 0 0 0 3 16h10a1.5 1.5 0 0 0 1.5-1.5V8.97a3.46 3.46 0 0 1-1.5.53v5a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5v-5a3.46 3.46 0 0 1-1.5-.53z'/></svg>") no-repeat center/contain !important;
-  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.855a2.5 2.5 0 0 1-2.5 2.5h-.09a2.5 2.5 0 0 1-2.44-2.056 2.5 2.5 0 0 1-3.94 0 2.5 2.5 0 0 1-2.44 2.056h-.09A2.5 2.5 0 0 1 0 6.225v-.855a1.5 1.5 0 0 1 .36-1.026L2.97 1.35zM8 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4.843-.763a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-9.686 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1.5 8.97V14.5A1.5 1.5 0 0 0 3 16h10a1.5 1.5 0 0 0 1.5-1.5V8.97a3.46 3.46 0 0 1-1.5.53v5a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5v-5a3.46 3.46 0 0 1-1.5-.53z'/></svg>") no-repeat center/contain !important;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M2.5 1.5h11l1.5 4V7a2 2 0 0 1-3.5 1.3A2 2 0 0 1 8 8.3 2 2 0 0 1 4.5 8.3 2 2 0 0 1 1 7V5.5l1.5-4zM2.5 9.8c.6.2 1.3.2 2-.1.7.4 1.6.4 2.3 0 .8.4 1.7.4 2.4 0 .7.3 1.4.4 2 .1V14H2.5V9.8z'/></svg>") no-repeat center/contain !important;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M2.5 1.5h11l1.5 4V7a2 2 0 0 1-3.5 1.3A2 2 0 0 1 8 8.3 2 2 0 0 1 4.5 8.3 2 2 0 0 1 1 7V5.5l1.5-4zM2.5 9.8c.6.2 1.3.2 2-.1.7.4 1.6.4 2.3 0 .8.4 1.7.4 2.4 0 .7.3 1.4.4 2 .1V14H2.5V9.8z'/></svg>") no-repeat center/contain !important;
 }
 
-/* ==================== BARRA DE PESQUISA ==================== */
+/* Search */
 #search-bar-entry,
 #search-bar-entry-mobile {
-  border-radius: 10px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(255, 255, 255, 0.02) !important;
-  backdrop-filter: blur(10px) !important;
-  padding: 0 16px !important;
   height: 38px !important;
-  transition: all 0.2s ease !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--nerix-line) !important;
+  background: rgba(248, 250, 252, 0.74) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
 }
 
-html:not(.dark) #search-bar-entry,
-html:not(.dark) #search-bar-entry-mobile {
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  background: rgba(0, 0, 0, 0.02) !important;
+html.dark #search-bar-entry,
+html.dark #search-bar-entry-mobile {
+  background: rgba(255, 255, 255, 0.045) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset !important;
 }
 
 #search-bar-entry:hover,
-#search-bar-entry-mobile:hover {
-  border-color: #0091FF !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+#search-bar-entry-mobile:hover,
+#search-bar-entry:focus-within,
+#search-bar-entry-mobile:focus-within {
+  border-color: rgba(0, 145, 255, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(0, 145, 255, 0.12) !important;
 }
 
-html:not(.dark) #search-bar-entry:hover,
-html:not(.dark) #search-bar-entry-mobile:hover {
-  border-color: #0091FF !important;
-  background: rgba(0, 0, 0, 0.04) !important;
-}
+@media (max-width: 768px) {
+  #navbar,
+  #topbar {
+    box-shadow: 0 1px 0 var(--nerix-line) !important;
+  }
 
-/* Ajuste da logo */
-.nav-logo {
-  height: 28px !important;
-  transition: transform 0.2s ease !important;
-}
+  #topbar-cta-button a,
+  .navbar-link a,
+  header nav a:not([href*="nerix.com.br"]) {
+    height: 36px !important;
+    padding: 0 11px !important;
+    font-size: 13px !important;
+  }
 
-.nav-logo:hover {
-  transform: scale(1.02) !important;
+  .nav-logo,
+  header img[src*="iconenome"] {
+    height: 27px !important;
+    max-height: 27px !important;
+  }
 }

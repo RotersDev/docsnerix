@@ -1,0 +1,30 @@
+---
+title: "Obter oferta"
+api: "GET /api/public/infoproducts/v1/offers/{offerId}"
+description: "Busca uma oferta pelo ID."
+---
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/offers/577332" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "id": "577332",
+  "name": "Oferta Principal",
+  "price": 10,
+  "promotional_price": null,
+  "is_default": true,
+  "final_price": 10,
+  "checkout_id": 123,
+  "checkout_slug": "z6qndhn",
+  "checkout_url": "https://pay.nerix.com.br/z6qndhn",
+  "product_id": "4146753"
+}
+```

@@ -1,0 +1,36 @@
+---
+title: "Consultar entrega"
+api: "GET /api/public/infoproducts/v1/orders/{orderId}/delivery"
+description: "Retorna os itens entregues ao comprador."
+---
+
+Use este endpoint para consultar o conteudo entregue ao cliente depois da compra.
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders/019f3cbc-3db5-7445-b0f0-598baa2af6a0/delivery" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "order_id": 123,
+  "order_number": "019f3cbc-3db5-7445-b0f0-598baa2af6a0",
+  "delivery_status": "pending",
+  "sent_at": null,
+  "items": [
+    {
+      "product_id": 4146753,
+      "title": "+200 Mapas Mentais para aprender Frances",
+      "value": null,
+      "delivered_at": null
+    }
+  ]
+}
+```
+
+Quando a entrega ja tiver sido enviada, `delivery_status` retorna `sent` e os itens podem trazer o link, chave, arquivo ou valor entregue em `items[].value`.

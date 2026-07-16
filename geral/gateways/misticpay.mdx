@@ -1,0 +1,64 @@
+---
+title: "MisticPay"
+sidebarTitle: "MisticPay"
+icon: "split"
+description: "Configure a MisticPay na Nerix com token, secret e webhook quando necessario."
+---
+
+Use a MisticPay quando sua operacao precisar de split, webhooks ou configuracoes avancadas de pagamento.
+
+## O que voce vai precisar
+
+- Conta MisticPay ativa.
+- Token de API.
+- Secret ou identificador da conta, se solicitado.
+- URL de webhook exibida pela Nerix, quando o gateway exigir callback.
+
+## Taxas e cadastro
+
+| Item | Valor |
+| --- | --- |
+| Taxa do gateway | R$ 0,50 |
+| Comissao Nerix | 3% |
+| Cadastro | [Criar conta MisticPay](https://app.misticpay.com/cadastro?ref=D03F7719) |
+
+## Passo a passo
+
+<Steps>
+  <Step title="Acesse o painel MisticPay">
+    Entre na conta responsavel pelos recebimentos.
+
+    {/* Coloque aqui a imagem do passo 1: /images/gateways/misticpay/passo-1-painel.png */}
+  </Step>
+  <Step title="Abra API ou desenvolvedores">
+    Localize a area onde ficam tokens, secrets e webhooks.
+
+    {/* Coloque aqui a imagem do passo 2: /images/gateways/misticpay/passo-2-api.png */}
+  </Step>
+  <Step title="Copie token e secret">
+    Copie as credenciais necessarias para autorizar a integracao.
+
+    {/* Coloque aqui a imagem do passo 3: /images/gateways/misticpay/passo-3-credenciais.png */}
+  </Step>
+  <Step title="Configure webhook, se existir">
+    Se o painel pedir uma URL de callback, use a URL exibida na configuracao da Nerix.
+
+    {/* Coloque aqui a imagem do passo 4: /images/gateways/misticpay/passo-4-webhook.png */}
+  </Step>
+  <Step title="Ative na Nerix">
+    Escolha **MisticPay**, cole as credenciais, ative o gateway e salve.
+
+    {/* Coloque aqui a imagem do passo 5: /images/gateways/misticpay/passo-5-nerix.png */}
+  </Step>
+</Steps>
+
+## Checklist
+
+- Token e secret preenchidos corretamente.
+- Webhook configurado, se necessario.
+- Pedido de teste aprovado.
+- Notificacao de pagamento recebida pela Nerix.
+
+<Warning>
+  Oculte tokens, secrets e IDs sensiveis antes de adicionar imagens.
+</Warning>

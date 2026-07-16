@@ -1,0 +1,63 @@
+---
+title: "TrexPay"
+sidebarTitle: "TrexPay"
+icon: "workflow"
+description: "Configure a TrexPay na Nerix usando token de API."
+---
+
+Use a TrexPay para configurar pagamentos via API direta na Nerix.
+
+## O que voce vai precisar
+
+- Conta TrexPay ativa.
+- Token de API em producao.
+- Acesso ao painel da Nerix.
+
+## Taxas e cadastro
+
+| Item | Valor |
+| --- | --- |
+| Taxa do gateway | 4,99% + R$ 1,99 |
+| Comissao Nerix | 3% |
+| Cadastro | [Criar conta TrexPay](https://app.trexpayments.com.br/register?ref=698bc9f0783ef) |
+
+## Passo a passo
+
+<Steps>
+  <Step title="Abra o painel TrexPay">
+    Entre na conta que vai processar os pagamentos.
+
+    {/* Coloque aqui a imagem do passo 1: /images/gateways/trexpay/passo-1-painel.png */}
+  </Step>
+  <Step title="Acesse a area de API">
+    Procure por integracoes, API, credenciais ou token.
+
+    {/* Coloque aqui a imagem do passo 2: /images/gateways/trexpay/passo-2-api.png */}
+  </Step>
+  <Step title="Copie o token">
+    Copie o token de producao. Use sandbox apenas para testes.
+
+    {/* Coloque aqui a imagem do passo 3: /images/gateways/trexpay/passo-3-token.png */}
+  </Step>
+  <Step title="Cole na Nerix">
+    Em **Configuracoes -> Gateway de Pagamento**, selecione **TrexPay** e preencha o token.
+
+    {/* Coloque aqui a imagem do passo 4: /images/gateways/trexpay/passo-4-nerix.png */}
+  </Step>
+  <Step title="Valide o checkout">
+    Crie uma compra de baixo valor para confirmar criacao da cobranca e aprovacao automatica.
+
+    {/* Coloque aqui a imagem do passo 5: /images/gateways/trexpay/passo-5-teste.png */}
+  </Step>
+</Steps>
+
+## Checklist
+
+- Token de producao inserido.
+- Gateway salvo e habilitado.
+- Pedido de teste gerado e aprovado.
+- Pagamento aparece no painel TrexPay.
+
+<Warning>
+  Remova ou borre o token antes de publicar prints.
+</Warning>

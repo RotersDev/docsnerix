@@ -1,0 +1,42 @@
+---
+title: "Obter pedido"
+api: "GET /api/public/infoproducts/v1/orders/{orderId}"
+description: "Consulta um pedido por ID interno ou numero do pedido."
+---
+
+## Path params
+
+<ParamField path="orderId" type="string" required>
+  ID numerico do pedido ou `order_number`.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders/019f3cbc-3db5-7445-b0f0-598baa2af6a0" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta
+
+```json
+{
+  "id": 123,
+  "order_number": "019f3cbc-3db5-7445-b0f0-598baa2af6a0",
+  "status": "paid",
+  "payment_status": "paid",
+  "total": "10.00",
+  "customer_email": "cliente@exemplo.com",
+  "items": [
+    {
+      "product_id": 4146753,
+      "product_name": "+200 Mapas Mentais para aprender Frances",
+      "quantity": 1,
+      "price": "10.00"
+    }
+  ],
+  "payment": {},
+  "customer": {}
+}
+```
