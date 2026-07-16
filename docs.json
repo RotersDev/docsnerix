@@ -276,7 +276,6 @@
     }
   },
   "styling": {
-    "eyebrows": "breadcrumbs",
-    "codeblocks": "system"
+    "eyebrows": "breadcrumbs"
   }
 }
