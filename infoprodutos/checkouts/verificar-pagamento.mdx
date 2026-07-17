@@ -1,0 +1,55 @@
+---
+title: "Verificar pagamento Pix"
+api: "POST /api/public/infoproducts/v1/orders/{orderId}/check-payment"
+description: "Consulta o provedor, confirma um Pix e retorna o status atualizado do pedido."
+---
+
+Use este endpoint depois de criar um Pix para confirmar se ele foi pago. A Nerix tambem atualiza pagamentos automaticamente pelos webhooks do provedor; esta rota e o fallback para o seu frontend, automacao ou sistema externo.
+
+<Note>
+  Guarde `order.order_number` retornado por `POST /checkouts`. Ele e o identificador recomendado para esta consulta.
+</Note>
+
+## Path params
+
+<ParamField path="orderId" type="string" required>
+  `order_number` ou ID interno do pedido. Use preferencialmente o `order_number`.
+</ParamField>
+
+## Exemplo
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders/019f688d-a5e0-7451-a01a-66c5deef534b/check-payment" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+## Resposta quando aprovado
+
+```json
+{
+  "paid": true,
+  "status": "approved",
+  "message": "Pagamento confirmado!"
+}
+```
+
+Quando aprovado, o pedido passa para `status: "paid"` e `payment_status: "paid"`. O valor liquido e creditado na Carteira Builder uma unica vez; repetir a chamada nao duplica saldo.
+
+## Resposta enquanto pendente
+
+```json
+{
+  "paid": false,
+  "status": "pending"
+}
+```
+
+## Estrategia recomendada
+
+1. Crie o Pix em `POST /checkouts` e armazene `order.order_number`.
+2. Mostre o QR Code ao comprador.
+3. Chame esta rota a cada 5 a 10 segundos enquanto estiver pendente.
+4. Pare o polling quando `paid` for `true`, o Pix expirar ou houver status final de falha/cancelamento.
+
+Para notificacao servidor-a-servidor, configure tambem o evento `order.approved` nos webhooks. O webhook e a via automatica; a verificacao acima e a protecao contra atraso ou perda de um webhook.

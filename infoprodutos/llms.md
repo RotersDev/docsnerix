@@ -410,6 +410,41 @@ Use `payment.qr_code_base64` para exibir imagem pronta do QR Code:
 
 ## Pedidos
 
+### Verificar pagamento Pix
+
+```http
+POST /orders/{orderId}/check-payment
+```
+
+Use o `order_number` retornado ao criar o checkout. A rota consulta o provedor de pagamento e, quando confirmado, atualiza o pedido para `paid`, aprova o pagamento e credita a Carteira Builder de forma idempotente. Tambem aceita o ID interno, mas prefira `order_number`.
+
+Enquanto o Pix estiver pendente, consulte a cada 5 a 10 segundos e pare assim que `paid` for `true`. A confirmacao por webhook do provedor continua funcionando automaticamente; esta rota e o fallback recomendado para interfaces e automacoes.
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/public/infoproducts/v1/orders/019f688d-a5e0-7451-a01a-66c5deef534b/check-payment" \
+  --header "Authorization: Bearer nerix_builder_SUA_CHAVE"
+```
+
+Resposta aprovada:
+
+```json
+{
+  "paid": true,
+  "status": "approved",
+  "message": "Pagamento confirmado!"
+}
+```
+
+Resposta pendente:
+
+```json
+{
+  "paid": false,
+  "status": "pending"
+}
+```
+
 ### Listar pedidos
 
 ```http

@@ -176,7 +176,8 @@
               {
                 "group": "Pagamentos",
                 "pages": [
-                  "infoprodutos/checkouts/criar-checkout"
+                  "infoprodutos/checkouts/criar-checkout",
+                  "infoprodutos/checkouts/verificar-pagamento"
                 ]
               },
               {
