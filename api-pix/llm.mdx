@@ -1,0 +1,140 @@
+﻿---
+title: "LLM"
+description: "Contrato compacto da API Pix da Nerix para copiar e enviar para IAs, agentes e desenvolvedores."
+---
+
+Copie o conteúdo abaixo e envie para uma IA, agente ou desenvolvedor integrar a API Pix da Nerix.
+
+```txt
+# API Pix - Nerix
+
+Base URL:
+https://api.nerix.com.br/api/v1
+
+Autenticação:
+Enviar a API Key em um dos headers:
+- Authorization: Bearer SUA_API_KEY
+- x-nerix-api-key: SUA_API_KEY
+- x-nerix-builder-key: SUA_API_KEY
+- x-builder-api-key: SUA_API_KEY
+
+Pagamentos aprovados caem automaticamente na carteira unificada do dono da API Key.
+
+============================================================
+1. Criar Pix
+============================================================
+
+Endpoint:
+POST /pix/transactions
+
+Body:
+{
+  "amount": 1490
+}
+
+Regras:
+- amount é obrigatório.
+- amount deve ser enviado em centavos.
+- 1490 representa R$ 14,90.
+
+Exemplo cURL:
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "amount": 1490
+  }'
+
+Exemplo JavaScript:
+const res = await fetch("https://api.nerix.com.br/api/v1/pix/transactions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer SUA_API_KEY",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ amount: 1490 })
+});
+
+const pix = await res.json();
+
+Resposta:
+{
+  "id": "pix_6f4d9b8c2a1e4f7a9b0c1d2e",
+  "status": "pending",
+  "amount": 1490,
+  "fee": 120,
+  "netAmount": 1370,
+  "copyPaste": "00020126580014br.gov.bcb.pix...",
+  "qrCodeBase64": "data:image/png;base64,iVBORw0KGgoAAA...",
+  "expiresAt": "2026-07-28T23:59:59.000Z",
+  "provider": "woovi",
+  "paymentId": "id_do_provedor",
+  "paidAt": null,
+  "createdAt": "2026-07-28T18:10:00.000Z",
+  "updatedAt": "2026-07-28T18:10:00.000Z"
+}
+
+Campos importantes:
+- id: ID da cobrança na Nerix. Salve para consultar depois.
+- status: pending, paid, failed, cancelled ou refunded.
+- amount: valor bruto em centavos.
+- fee: taxa em centavos.
+- netAmount: valor líquido em centavos.
+- copyPaste: Pix copia e cola.
+- qrCodeBase64: imagem do QR Code em Base64, quando disponível.
+- paymentId: ID interno do pagamento/provedor para conciliação.
+
+============================================================
+2. Consultar Pix
+============================================================
+
+Endpoint:
+GET /pix/transactions/{id}
+
+Exemplo:
+curl --request GET \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions/pix_6f4d9b8c2a1e4f7a9b0c1d2e" \
+  --header "Authorization: Bearer SUA_API_KEY"
+
+============================================================
+3. Verificar pagamento
+============================================================
+
+Endpoint:
+POST /pix/transactions/{id}/check
+
+Use para consultar o provedor Pix e atualizar o status salvo na Nerix.
+
+Exemplo:
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions/pix_6f4d9b8c2a1e4f7a9b0c1d2e/check" \
+  --header "Authorization: Bearer SUA_API_KEY"
+
+Quando confirmado:
+- status muda para paid.
+- paidAt é preenchido.
+- valor líquido entra na carteira unificada.
+- movimentação aparece como origem API.
+
+============================================================
+4. Status
+============================================================
+
+pending: aguardando pagamento.
+paid: pago.
+failed: falhou.
+cancelled: cancelado.
+refunded: reembolsado.
+
+============================================================
+5. Boas práticas
+============================================================
+
+- Envie amount em centavos.
+- Salve o id retornado pela Nerix.
+- Nunca exponha a API Key no frontend público.
+- Use GET para consulta simples.
+- Use POST /check apenas para forçar consulta no provedor.
+- Evite consultar em loop agressivo.
+```

@@ -1,0 +1,193 @@
+﻿---
+title: "API Pix"
+api: "POST /api/v1/pix/transactions"
+description: "Gere cobranças Pix com uma integração simples: API Key, valor e resposta com QR Code."
+---
+
+A **API Pix da Nerix** permite criar cobranças Pix de forma simples e direta.
+
+Você envia apenas o valor, recebe o Pix copia e cola e acompanha o status da cobrança.
+
+<Info>
+  Pagamentos aprovados caem automaticamente na carteira unificada do dono da API Key e aparecem com origem `API`.
+</Info>
+
+## Base URL
+
+```txt
+https://api.nerix.com.br/api/v1
+```
+
+## Autenticação
+
+Envie sua API Key no header `Authorization`:
+
+```http
+Authorization: Bearer SUA_API_KEY
+```
+
+Também são aceitos:
+
+```http
+x-nerix-api-key: SUA_API_KEY
+x-nerix-builder-key: SUA_API_KEY
+x-builder-api-key: SUA_API_KEY
+```
+
+## Criar Pix
+
+```http
+POST /pix/transactions
+```
+
+### Body
+
+<ParamField body="amount" type="number" required>
+  Valor em centavos. Exemplo: `1490` representa R$ 14,90.
+</ParamField>
+
+### Exemplo
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "amount": 1490
+  }'
+```
+
+```js
+const res = await fetch("https://api.nerix.com.br/api/v1/pix/transactions", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer SUA_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    amount: 1490,
+  }),
+});
+
+const pix = await res.json();
+```
+
+### Resposta
+
+```json
+{
+  "id": "pix_6f4d9b8c2a1e4f7a9b0c1d2e",
+  "status": "pending",
+  "amount": 1490,
+  "fee": 120,
+  "netAmount": 1370,
+  "copyPaste": "00020126580014br.gov.bcb.pix...",
+  "qrCodeBase64": "data:image/png;base64,iVBORw0KGgoAAA...",
+  "expiresAt": "2026-07-28T23:59:59.000Z",
+  "provider": "woovi",
+  "paymentId": "id_do_provedor",
+  "paidAt": null,
+  "createdAt": "2026-07-28T18:10:00.000Z",
+  "updatedAt": "2026-07-28T18:10:00.000Z"
+}
+```
+
+## Campos importantes
+
+| Campo | Descrição |
+| --- | --- |
+| `id` | ID da cobrança na Nerix. Salve este valor para consultar depois. |
+| `status` | Status atual da cobrança. |
+| `amount` | Valor bruto em centavos. |
+| `fee` | Taxa em centavos. |
+| `netAmount` | Valor líquido em centavos. |
+| `copyPaste` | Código Pix copia e cola. |
+| `qrCodeBase64` | Imagem do QR Code em Base64, quando disponível. |
+| `paymentId` | ID interno do pagamento/provedor para conciliação. |
+
+## Consultar Pix
+
+```http
+GET /pix/transactions/{id}
+```
+
+```bash
+curl --request GET \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions/pix_6f4d9b8c2a1e4f7a9b0c1d2e" \
+  --header "Authorization: Bearer SUA_API_KEY"
+```
+
+## Verificar pagamento
+
+```http
+POST /pix/transactions/{id}/check
+```
+
+Use este endpoint para consultar o provedor Pix e atualizar o status salvo na Nerix.
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/transactions/pix_6f4d9b8c2a1e4f7a9b0c1d2e/check" \
+  --header "Authorization: Bearer SUA_API_KEY"
+```
+
+Quando o pagamento for confirmado:
+
+- `status` muda para `paid`.
+- `paidAt` é preenchido.
+- O valor líquido entra na carteira unificada.
+- A movimentação aparece como origem `API`.
+
+## Status
+
+| Status | Descrição |
+| --- | --- |
+| `pending` | Aguardando pagamento. |
+| `paid` | Pago. |
+| `failed` | Falhou. |
+| `cancelled` | Cancelado. |
+| `refunded` | Reembolsado. |
+
+## Boas práticas
+
+- Envie `amount` em centavos.
+- Salve o `id` retornado pela Nerix.
+- Não exponha sua API Key no frontend público.
+- Use `GET` para consultar o status salvo.
+- Use `POST /check` somente quando quiser forçar a verificação no provedor.
+- Evite consultar em loop agressivo.
+
+## Erros comuns
+
+### API Key inválida
+
+```json
+{
+  "error": "API key inválida ou inativa"
+}
+```
+
+### Valor inválido
+
+```json
+{
+  "error": "Valor inválido. Envie amount em centavos."
+}
+```
+
+### Provedor Pix indisponível
+
+```json
+{
+  "error": "Nenhum provedor Pix ativo na carteira."
+}
+```
+
+### Cobrança não encontrada
+
+```json
+{
+  "error": "Cobrança Pix não encontrada."
+}
+```
