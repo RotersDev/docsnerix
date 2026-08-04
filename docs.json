@@ -26,12 +26,40 @@
             ]
           },
           {
-            "group": "Geral",
+            "group": "Guias da plataforma",
             "pages": [
-              "geral/metodos-pagamento",
-              "geral/usar-meu-dominio",
-              "geral/instalar-app",
-              "geral/inteligencia-artificial"
+              {
+                "group": "Primeiros passos",
+                "icon": "rocket",
+                "pages": [
+                  "guias/primeiros-passos/criar-loja",
+                  "guias/primeiros-passos/criar-produto"
+                ]
+              },
+              {
+                "group": "Loja e configura\u00e7\u00f5es",
+                "icon": "store",
+                "pages": [
+                  "geral/usar-meu-dominio",
+                  "geral/instalar-app",
+                  "geral/inteligencia-artificial",
+                  "guias/loja-configuracoes/editor-local-template"
+                ]
+              },
+              {
+                "group": "Pagamentos e Pix",
+                "icon": "credit-card",
+                "pages": [
+                  "geral/metodos-pagamento"
+                ]
+              },
+              {
+                "group": "Integra\u00e7\u00f5es",
+                "icon": "plug",
+                "pages": [
+                  "guias/integracoes/primeira-requisicao-api"
+                ]
+              }
             ]
           }
         ]
@@ -50,8 +78,7 @@
               "editor/tags",
               "editor/filtros",
               "editor/paginas",
-              "editor/schema",
-              "editor/editor-local"
+              "editor/schema"
             ]
           }
         ]
@@ -270,7 +297,7 @@
       "website": "https://nerix.com.br"
     }
   },
-  "description": "Documenta\u00e7\u00e3o oficial da API Nerix",
+  "description": "Guias, tutoriais e refer\u00eancia oficial da plataforma Nerix",
   "appearance": {
     "default": "dark"
   },
@@ -291,5 +318,11 @@
   },
   "styling": {
     "eyebrows": "breadcrumbs"
+  },
+  "interaction": {
+    "drilldown": false
+  },
+  "seo": {
+    "indexing": "all"
   }
 }

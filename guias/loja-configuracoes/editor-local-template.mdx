@@ -1,0 +1,116 @@
+---
+title: "Editar um template localmente"
+sidebarTitle: "Editar template localmente"
+description: "Crie um template, gere uma sessão local e edite os arquivos da sua loja pelo computador."
+---
+
+O editor local permite trabalhar nos arquivos do template usando VS Code, Cursor, WebStorm ou outro editor instalado no seu computador. As alterações salvas localmente são sincronizadas com a Nerix durante a sessão.
+
+## Antes de começar
+
+Você precisará de:
+
+- Acesso ao painel da loja.
+- [Node.js](https://nodejs.org/) instalado no computador.
+- Um terminal aberto na pasta em que deseja trabalhar.
+
+<Steps>
+  <Step title="Crie um novo template">
+    No painel da loja, abra a área **Templates da loja** e clique em **Criar novo template**.
+
+    <Frame caption="Use o botão Criar novo template para iniciar.">
+      <img
+        src="/images/editor/sessao-local/01-criar-novo-template.png"
+        alt="Tela Templates da loja com uma seta indicando o botão Criar novo template"
+      />
+    </Frame>
+  </Step>
+
+  <Step title="Defina o nome e a base">
+    Informe um nome para identificar o template, escolha a base que deseja utilizar e clique em **Criar novo template**.
+
+    <Frame caption="Informe o nome, confira a base selecionada e confirme a criação.">
+      <img
+        src="/images/editor/sessao-local/02-definir-nome-e-base.png"
+        alt="Modal Criar novo template com o campo de nome, a base Padrão Nerix e o botão de confirmação destacados"
+      />
+    </Frame>
+  </Step>
+
+  <Step title="Abra as opções do template">
+    Aguarde a criação terminar. No card do novo template, clique no botão de **três pontos** no canto superior direito.
+
+    <Frame caption="Abra o menu de ações do template criado.">
+      <img
+        src="/images/editor/sessao-local/03-abrir-menu-template.png"
+        alt="Card de um template com uma seta indicando o menu de três pontos"
+      />
+    </Frame>
+  </Step>
+
+  <Step title="Ative o template">
+    No menu de ações, clique em **Ativar template**. Assim, você poderá acompanhar na loja as alterações feitas durante o desenvolvimento.
+
+    <Frame caption="Selecione Ativar template no menu de ações.">
+      <img
+        src="/images/editor/sessao-local/04-ativar-template.png"
+        alt="Menu de ações do template com a opção Ativar template destacada"
+      />
+    </Frame>
+  </Step>
+
+  <Step title="Gere uma sessão local">
+    Abra novamente o menu de três pontos e clique em **Sessão local**. A Nerix gerará um comando com um token temporário para conectar o computador ao template.
+
+    <Frame caption="Clique em Sessão local para gerar o comando de conexão.">
+      <img
+        src="/images/editor/sessao-local/05-iniciar-sessao-local.png"
+        alt="Menu de ações do template com a opção Sessão local destacada"
+      />
+    </Frame>
+
+    Na modal **Comando**, clique em **Copiar comando**. O token e o endereço da API já estarão preenchidos automaticamente.
+
+    <Frame caption="Copie o comando completo gerado para esta sessão.">
+      <img
+        src="/images/editor/sessao-local/06-copiar-comando-gerado.png"
+        alt="Modal Comando mostrando uma sessão local do editor e o botão Copiar comando"
+      />
+    </Frame>
+
+    <Warning>
+      O token concede acesso temporário ao template. Não publique, compartilhe ou salve esse valor em repositórios.
+    </Warning>
+  </Step>
+
+  <Step title="Execute o comando no terminal">
+    Abra o terminal na pasta em que deseja manter os arquivos, cole o comando copiado e pressione `Enter`. O formato será semelhante a:
+
+    ```bash
+    npx --yes nerix-editor@latest --api "https://api.nerix.com.br" --token "<SEU_TOKEN_AQUI>"
+    ```
+
+    A CLI baixará os arquivos do template e iniciará a sincronização. Mantenha o terminal aberto enquanto estiver editando.
+  </Step>
+
+  <Step title="Edite e acompanhe as alterações">
+    Abra a pasta no editor de sua preferência. Você pode usar um editor tradicional ou um editor com recursos de IA; a escolha não altera a conexão com a Nerix.
+
+    Quando o terminal exibir os arquivos baixados e a mensagem de observação, a sessão estará pronta. Sempre que salvar um arquivo, acompanhe o terminal para confirmar o envio e revise o resultado na loja.
+
+    <Frame caption="Exemplo de uma sessão conectada no Antigravity IDE. Qualquer editor com terminal pode ser utilizado.">
+      <img
+        src="/images/editor/sessao-local/07-editor-conectado.png"
+        alt="Antigravity IDE com os arquivos do template abertos e o terminal conectado à sessão local da Nerix"
+      />
+    </Frame>
+  </Step>
+</Steps>
+
+## Encerrar a sessão
+
+Quando terminar, pressione `Ctrl + C` no terminal. Para trabalhar novamente mais tarde, gere uma nova sessão local pelo menu do template.
+
+<Tip>
+  Antes de alterar muitos arquivos, faça uma pequena mudança visual e confirme que a sincronização e o preview estão funcionando.
+</Tip>

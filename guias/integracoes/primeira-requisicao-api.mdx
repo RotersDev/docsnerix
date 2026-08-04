@@ -1,0 +1,53 @@
+---
+title: "Fazer sua primeira requisição à API"
+sidebarTitle: "Fazer a primeira requisição à API"
+description: "Autentique uma chamada à API Nerix e valide sua integração em poucos passos."
+---
+
+Neste guia, você consultará os pedidos da sua loja usando uma chave de API. Essa chamada simples confirma que a URL, a autenticação e o ambiente estão configurados corretamente.
+
+## Pré-requisitos
+
+- Uma loja Nerix ativa.
+- Uma chave de API da loja.
+- Um terminal com `curl` ou um cliente HTTP equivalente.
+
+<Steps>
+  <Step title="Crie e proteja sua chave">
+    No painel da loja, acesse **Configurações da API** ou **Chaves de API**, crie uma chave e armazene-a em um gerenciador de segredos.
+
+    <Warning>
+      Nunca coloque a chave em JavaScript executado no navegador, repositórios públicos ou capturas de tela.
+    </Warning>
+  </Step>
+
+  <Step title="Envie a requisição">
+    Substitua `SUA_CHAVE_AQUI` pela chave criada no passo anterior.
+
+    ```bash
+    curl --request GET \\
+      --url 'https://api.nerix.com.br/api/public/orders?limit=1&page=1' \\
+      --header 'X-nerixkey: SUA_CHAVE_AQUI'
+    ```
+  </Step>
+
+  <Step title="Confirme a resposta">
+    Uma resposta de sucesso deve retornar uma lista paginada em JSON, mesmo que a loja ainda não tenha pedidos. Se houver erro de autenticação, confirme se a chave foi copiada integralmente e se o cabeçalho usado é `X-nerixkey`.
+  </Step>
+
+  <Step title="Avance para os recursos da API">
+    Com a autenticação validada, consulte a [referência de pedidos](/api-reference/orders/list-orders) e explore produtos, clientes e webhooks na aba **API Reference**.
+  </Step>
+</Steps>
+
+## Próximos passos
+
+<CardGroup cols={2}>
+  <Card title="Autenticação" icon="key" href="/autenticacao">
+    Entenda o cabeçalho de autenticação e os cuidados com sua chave.
+  </Card>
+
+  <Card title="Limites de uso" icon="gauge-high" href="/api-reference/rate-limits">
+    Prepare sua integração para respeitar os limites da API.
+  </Card>
+</CardGroup>
