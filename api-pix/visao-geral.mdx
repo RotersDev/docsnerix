@@ -1,15 +1,13 @@
-﻿---
+---
 title: "API Pix"
 api: "POST /api/v1/pix/transactions"
-description: "Gere cobranças Pix com uma integração simples: API Key, valor e resposta com QR Code."
+description: "Gere cobranças Pix e envie pagamentos Pix com uma integração simples: API Key, valor (ou código copia e cola) e resposta padronizada."
 ---
 
-A **API Pix da Nerix** permite criar cobranças Pix de forma simples e direta.
-
-Você envia apenas o valor, recebe o Pix copia e cola e acompanha o status da cobrança.
+A **API Pix da Nerix** permite **receber** (criar cobranças Pix) e **enviar** (pagar um Pix copia e cola) usando a mesma API Key, de forma simples e direta.
 
 <Info>
-  Pagamentos aprovados caem automaticamente na carteira unificada do dono da API Key e aparecem com origem `API`.
+  Pagamentos recebidos aprovados caem automaticamente na carteira unificada do dono da API Key e aparecem com origem `API`. Pagamentos enviados debitam o saldo dessa mesma carteira.
 </Info>
 
 ## Base URL
@@ -34,6 +32,10 @@ x-nerix-builder-key: SUA_API_KEY
 x-builder-api-key: SUA_API_KEY
 ```
 
+---
+
+# Receber Pix (cobrança)
+
 ## Criar Pix
 
 ```http
@@ -43,7 +45,7 @@ POST /pix/transactions
 ### Body
 
 <ParamField body="amount" type="number" required>
-  Valor em centavos. Exemplo: `1490` representa R$ 14,90.
+  Valor em centavos. Exemplo: `1490` representa R\$ 14,90.
 </ParamField>
 
 ### Exemplo
@@ -149,15 +151,6 @@ Quando o pagamento for confirmado:
 | `cancelled` | Cancelado. |
 | `refunded` | Reembolsado. |
 
-## Boas práticas
-
-- Envie `amount` em centavos.
-- Salve o `id` retornado pela Nerix.
-- Não exponha sua API Key no frontend público.
-- Use `GET` para consultar o status salvo.
-- Use `POST /check` somente quando quiser forçar a verificação no provedor.
-- Evite consultar em loop agressivo.
-
 ## Erros comuns
 
 ### API Key inválida
@@ -191,3 +184,173 @@ Quando o pagamento for confirmado:
   "error": "Cobrança Pix não encontrada."
 }
 ```
+
+---
+
+# Enviar Pix (pagar / sacar)
+
+Paga um código Pix copia e cola **de valor fixo** debitando o saldo disponível da sua carteira unificada. É uma chamada única: valida, debita e envia — não existe um passo separado de "decodificar antes de confirmar".
+
+<Warning>
+  Essa operação move dinheiro para fora da carteira. O mesmo código Pix nunca é processado duas vezes (proteção por idempotência), e há um limite de operações de saída por hora, o mesmo aplicado aos saques feitos pelo painel.
+</Warning>
+
+## Pagar Pix
+
+```http
+POST /pix/payouts
+```
+
+### Body
+
+<ParamField body="qr_code" type="string" required>
+  Código Pix copia e cola a ser pago. Precisa ser um Pix de **valor fixo** — códigos dinâmicos sem valor definido são rejeitados.
+</ParamField>
+
+### Exemplo
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/payouts" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "qr_code": "00020126580014br.gov.bcb.pix..."
+  }'
+```
+
+```js
+const res = await fetch("https://api.nerix.com.br/api/v1/pix/payouts", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer SUA_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    qr_code: "00020126580014br.gov.bcb.pix...",
+  }),
+});
+
+const payout = await res.json();
+```
+
+### Resposta
+
+```json
+{
+  "id": "payout_1234",
+  "status": "paid",
+  "amount": 1490,
+  "fee": 120,
+  "totalDebited": 1610,
+  "merchantName": "Loja Exemplo",
+  "paidAt": "2026-08-23T18:10:00.000Z",
+  "createdAt": "2026-08-23T18:10:00.000Z",
+  "updatedAt": "2026-08-23T18:10:00.000Z"
+}
+```
+
+## Campos importantes
+
+| Campo | Descrição |
+| --- | --- |
+| `id` | ID do pagamento na Nerix. |
+| `status` | Status final do pagamento (`paid` ou `failed`). |
+| `amount` | Valor do Pix pago, em centavos. |
+| `fee` | Taxa cobrada pela Nerix, em centavos. |
+| `totalDebited` | Total debitado da carteira (`amount` \+ `fee`), em centavos. |
+| `merchantName` | Nome do recebedor identificado no código Pix, quando disponível. |
+| `paidAt` | Data de confirmação do envio. |
+
+<Note>
+  Esse endpoint é síncrono: a resposta já vem com o status final (`paid` ou `failed`). Não existe estado `pending` para pagamentos enviados.
+</Note>
+
+## Status
+
+| Status | Descrição |
+| --- | --- |
+| `paid` | Pix enviado e confirmado. |
+| `failed` | Falha ao enviar — o valor debitado é estornado automaticamente para a carteira. |
+
+## Erros comuns
+
+### Código Pix ausente ou inválido
+
+```json
+{
+  "error": "Informe o codigo Pix copia e cola.",
+  "code": "PIX_PAYMENT_MISSING_CODE"
+}
+```
+
+```json
+{
+  "error": "Código Pix inválido",
+  "code": "PIX_PAYMENT_INVALID_CODE"
+}
+```
+
+### Código Pix sem valor fixo
+
+```json
+{
+  "error": "Não conseguimos identificar o valor dessa cobrança Pix. Confira se o código está completo.",
+  "code": "PIX_PAYMENT_NO_FIXED_AMOUNT"
+}
+```
+
+### Código já pago (idempotência)
+
+```json
+{
+  "error": "Esse código Pix já foi pago ou está sendo processado.",
+  "code": "PIX_PAYMENT_DUPLICATE"
+}
+```
+
+### Saldo insuficiente
+
+```json
+{
+  "error": "Saldo insuficiente. Você precisa de R$ 16,10 (...) e tem R$ 10,00 disponível.",
+  "code": "PIX_PAYMENT_INSUFFICIENT_BALANCE"
+}
+```
+
+### Limite de operações por hora
+
+```json
+{
+  "error": "Você já movimentou a carteira recentemente. Aguarde 1 hora para tentar de novo.",
+  "code": "PIX_PAYMENT_RATE_LIMIT"
+}
+```
+
+### Conta não verificada
+
+```json
+{
+  "error": "Verifique sua conta para solicitar saques.",
+  "code": "ACCOUNT_KYC_NOT_APPROVED"
+}
+```
+
+### Valor acima do limite permitido
+
+```json
+{
+  "error": "O valor máximo permitido é R$ 5.000,00 (incluindo a taxa).",
+  "code": "PIX_PAYMENT_MAX_AMOUNT"
+}
+```
+
+---
+
+## Boas práticas
+
+- Envie valores sempre em centavos.
+- Salve o `id` retornado pela Nerix para cada cobrança ou pagamento.
+- Não exponha sua API Key no frontend público.
+- Ao **receber**: use `GET` para consultar o status salvo e `POST /check` só quando quiser forçar a verificação no provedor. Evite consultar em loop agressivo.
+- Ao **enviar**: trate `PIX_PAYMENT_DUPLICATE` como sucesso idempotente (o Pix já foi processado) em vez de erro — é a proteção contra reenvio.
