@@ -1,4 +1,4 @@
-﻿---
+---
 title: "LLM"
 description: "Contrato compacto da API Pix da Nerix para copiar e enviar para IAs, agentes e desenvolvedores."
 ---
@@ -18,11 +18,15 @@ Enviar a API Key em um dos headers:
 - x-nerix-builder-key: SUA_API_KEY
 - x-builder-api-key: SUA_API_KEY
 
-Pagamentos aprovados caem automaticamente na carteira unificada do dono da API Key.
+Pagamentos recebidos aprovados caem automaticamente na carteira unificada do dono da API Key.
+Pagamentos enviados debitam o saldo dessa mesma carteira.
 
 ============================================================
-1. Criar Pix
+RECEBER PIX (cobrança)
 ============================================================
+
+1. Criar Pix
+------------------------------------------------------------
 
 Endpoint:
 POST /pix/transactions
@@ -70,6 +74,7 @@ Resposta:
   "expiresAt": "2026-07-28T23:59:59.000Z",
   "provider": "woovi",
   "paymentId": "id_do_provedor",
+  "payer": null,
   "paidAt": null,
   "createdAt": "2026-07-28T18:10:00.000Z",
   "updatedAt": "2026-07-28T18:10:00.000Z"
@@ -83,11 +88,13 @@ Campos importantes:
 - netAmount: valor líquido em centavos.
 - copyPaste: Pix copia e cola.
 - qrCodeBase64: imagem do QR Code em Base64, quando disponível.
+- provider: qual provedor Pix processou a cobrança.
 - paymentId: ID interno do pagamento/provedor para conciliação.
+- payer: { name, document } de quem pagou, confirmado pelo provedor. null até aprovar,
+  e sempre null se o provedor ativo não expuser esse dado.
 
-============================================================
 2. Consultar Pix
-============================================================
+------------------------------------------------------------
 
 Endpoint:
 GET /pix/transactions/{id}
@@ -97,9 +104,8 @@ curl --request GET \
   --url "https://api.nerix.com.br/api/v1/pix/transactions/pix_6f4d9b8c2a1e4f7a9b0c1d2e" \
   --header "Authorization: Bearer SUA_API_KEY"
 
-============================================================
 3. Verificar pagamento
-============================================================
+------------------------------------------------------------
 
 Endpoint:
 POST /pix/transactions/{id}/check
@@ -114,12 +120,12 @@ curl --request POST \
 Quando confirmado:
 - status muda para paid.
 - paidAt é preenchido.
+- payer é preenchido, se o provedor expuser esse dado.
 - valor líquido entra na carteira unificada.
 - movimentação aparece como origem API.
 
-============================================================
-4. Status
-============================================================
+4. Status (receber)
+------------------------------------------------------------
 
 pending: aguardando pagamento.
 paid: pago.
@@ -128,13 +134,139 @@ cancelled: cancelado.
 refunded: reembolsado.
 
 ============================================================
-5. Boas práticas
+ENVIAR PIX (sacar / pagar)
+============================================================
+
+Um único endpoint, dois jeitos de informar o destino. Informe exatamente
+um dos dois por chamada (pix_key OU qr_code, nunca os dois):
+- pix_key: chave Pix normal (CPF, CNPJ, e-mail, telefone ou chave aleatória) + amount.
+- qr_code: Pix copia e cola de valor fixo de terceiro. amount é ignorado
+  (o valor vem do próprio código).
+
+5. Enviar Pix
+------------------------------------------------------------
+
+Endpoint:
+POST /pix/payouts
+
+Body (chave Pix normal):
+{
+  "pix_key": "cliente@exemplo.com",
+  "pix_key_type": "EMAIL",
+  "amount": 1490
+}
+
+Body (Pix copia e cola):
+{
+  "qr_code": "00020126580014br.gov.bcb.pix..."
+}
+
+Regras:
+- pix_key_type é opcional (CPF, CNPJ, EMAIL, PHONE ou RANDOM) — se omitido, é inferido.
+- amount é obrigatório com pix_key, em centavos. Não envie com qr_code.
+- qr_code precisa ser um Pix de valor fixo — códigos dinâmicos sem valor são rejeitados.
+- Mesmo código copia e cola nunca é processado duas vezes (idempotência).
+- Existe limite de operações de saída por hora (compartilhado com o painel).
+
+Exemplo cURL (chave Pix):
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/payouts" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "pix_key": "cliente@exemplo.com",
+    "pix_key_type": "EMAIL",
+    "amount": 1490
+  }'
+
+Exemplo cURL (copia e cola):
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/pix/payouts" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "qr_code": "00020126580014br.gov.bcb.pix..."
+  }'
+
+Resposta:
+{
+  "id": "payout_1234",
+  "status": "paid",
+  "amount": 1490,
+  "fee": 120,
+  "totalDebited": 1610,
+  "pixKey": "cliente@exemplo.com",
+  "merchantName": null,
+  "recipient": { "name": "João Macaco", "document": "12345678900" },
+  "provider": "woovi",
+  "paidAt": "2026-08-23T18:10:00.000Z",
+  "createdAt": "2026-08-23T18:10:00.000Z",
+  "updatedAt": "2026-08-23T18:10:00.000Z"
+}
+
+Campos importantes:
+- id: ID do envio na Nerix. Salve para consultar depois.
+- status: processing, paid ou failed.
+- amount: valor enviado em centavos.
+- fee: taxa em centavos.
+- totalDebited: total debitado da carteira (amount + fee) em centavos.
+- pixKey: chave Pix de destino usada.
+- merchantName: nome dentro do código copia e cola, quando foi esse o modo usado.
+- recipient: { name, document } de quem recebeu de fato, confirmado pelo provedor. null até confirmar.
+- provider: qual provedor processou o envio.
+- paidAt: data de confirmação. null enquanto status é processing.
+
+IMPORTANTE: o provedor que processa o envio é configurável na carteira
+(Woovi ou Promisse) e pode mudar. Um confirma na hora (paid/failed direto
+na resposta); o outro processa em fila e a resposta vem processing —
+nesse caso, consulte GET /pix/payouts/{id} até confirmar. Nunca assuma
+sucesso a partir de status processing.
+
+6. Consultar envio
+------------------------------------------------------------
+
+Endpoint:
+GET /pix/payouts/{id}
+
+Funciona tanto pra envio por chave Pix quanto por copia e cola.
+
+Exemplo:
+curl --request GET \
+  --url "https://api.nerix.com.br/api/v1/pix/payouts/payout_1234" \
+  --header "Authorization: Bearer SUA_API_KEY"
+
+7. Status (enviar)
+------------------------------------------------------------
+
+processing: enviado ao provedor, aguardando confirmação. Valor já saiu da carteira.
+paid: confirmado, dinheiro chegou ao destinatário.
+failed: falhou. Valor debitado é estornado automaticamente para a carteira.
+
+8. Erros comuns (enviar)
+------------------------------------------------------------
+
+PIX_PAYOUT_MISSING_DESTINATION: nem pix_key nem qr_code foram enviados.
+PIX_PAYOUT_AMBIGUOUS_DESTINATION: os dois (pix_key e qr_code) foram enviados juntos.
+PIX_PAYOUT_MISSING_AMOUNT: amount ausente ao usar pix_key.
+PIX_PAYMENT_INVALID_CODE: qr_code inválido.
+PIX_PAYMENT_NO_FIXED_AMOUNT: qr_code sem valor fixo.
+PIX_PAYMENT_DUPLICATE: qr_code já foi pago (idempotência — trate como sucesso).
+WITHDRAWAL_MIN_AMOUNT / WITHDRAWAL_MAX_AMOUNT / PIX_PAYMENT_MAX_AMOUNT: valor fora dos limites.
+WITHDRAWAL_INSUFFICIENT_BALANCE: saldo insuficiente.
+WITHDRAWAL_RATE_LIMIT: limite de operações por hora atingido.
+ACCOUNT_KYC_NOT_APPROVED: conta não verificada, precisa aprovar identidade antes de sacar.
+WITHDRAWAL_PROVIDER_NOT_CONFIGURED: provedor de envio indisponível no momento.
+
+============================================================
+9. Boas práticas
 ============================================================
 
 - Envie amount em centavos.
 - Salve o id retornado pela Nerix.
 - Nunca exponha a API Key no frontend público.
 - Use GET para consulta simples.
-- Use POST /check apenas para forçar consulta no provedor.
+- Use POST /pix/transactions/{id}/check apenas para forçar consulta no provedor (lado receber).
 - Evite consultar em loop agressivo.
+- No envio, trate PIX_PAYMENT_DUPLICATE como sucesso idempotente, não como erro.
+- No envio, se status vier processing, faça polling em GET /pix/payouts/{id} até paid ou failed.
 ```
