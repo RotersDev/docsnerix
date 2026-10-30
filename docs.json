@@ -180,6 +180,30 @@
         ]
       },
       {
+        "tab": "Links de Pagamento",
+        "icon": "link",
+        "groups": [
+          {
+            "group": "Come\u00e7ando",
+            "pages": [
+              "links-de-pagamento/visao-geral",
+              "links-de-pagamento/webhooks",
+              "links-de-pagamento/erros-e-limites",
+              "links-de-pagamento/agentes-de-ia"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "links-de-pagamento/criar-link",
+              "links-de-pagamento/consultar-link",
+              "links-de-pagamento/listar-links",
+              "links-de-pagamento/desativar-link"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Infoprodutos",
         "icon": "box",
         "groups": [

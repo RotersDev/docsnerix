@@ -1,0 +1,76 @@
+---
+title: "Consultar link"
+api: "GET https://api.nerix.com.br/api/v1/payment-links/{id}"
+description: "Mostra o link com status, formas de pagamento e os últimos pagamentos."
+---
+
+Permissão necessária: `payment_links:read` (ou `pix:read`).
+
+<ParamField path="id" type="string" required>
+  ID do link, devolvido na criação (começa com `cl`).
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url "https://api.nerix.com.br/api/v1/payment-links/cl9e19ef77128d489359a54a782a69abea" \
+  --header "Authorization: Bearer SUA_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "id": "cl9e19ef77128d489359a54a782a69abea",
+  "object": "payment_link",
+  "url": "https://pay.nerix.com.br/cl9e19ef77128d489359a54a782a69abea",
+  "status": "paid",
+  "type": "single",
+  "amount": 4990,
+  "currency": "BRL",
+  "externalId": "pedido-123",
+  "metadata": { "plano": "pro" },
+  "paidCount": 1,
+  "paidAmount": 5240,
+  "lastPaidAt": "2026-10-30T03:18:52.122Z",
+  "duplicatePayment": false,
+  "paymentMethods": ["pix", "card"],
+  "payments": [
+    {
+      "id": "MPX-1793330332102-K3J9QZ",
+      "object": "payment",
+      "status": "paid",
+      "method": "card",
+      "amount": 5240,
+      "installments": 3,
+      "customer": { "name": "Maria Silva", "email": "maria@exemplo.com" },
+      "paidAt": "2026-10-30T03:18:52.112Z",
+      "createdAt": "2026-10-30T03:18:40.102Z"
+    }
+  ]
+}
+```
+
+```json 404
+{ "error": "Link de pagamento não encontrado.", "code": "NOT_FOUND" }
+```
+
+</ResponseExample>
+
+## Pagamentos do link
+
+`payments` traz os 20 pagamentos mais recentes do link.
+
+<ResponseField name="payments[].id" type="string">ID do pagamento.</ResponseField>
+<ResponseField name="payments[].status" type="string">`pending`, `paid`, `failed`, `refunded` ou `cancelled`.</ResponseField>
+<ResponseField name="payments[].method" type="string">`pix`, `card` ou `crypto`.</ResponseField>
+<ResponseField name="payments[].amount" type="integer">Valor pago pelo cliente, em centavos. No cartão inclui os juros do parcelamento quando a loja repassa a taxa ao cliente.</ResponseField>
+<ResponseField name="payments[].installments" type="integer | null">Parcelas do cartão. `null` em Pix e Litecoin.</ResponseField>
+<ResponseField name="payments[].paidAt" type="string | null">Data da confirmação.</ResponseField>
+
+<Tip>
+  Prefira o webhook `payment_link.paid`. Se precisar consultar, faça a cada 5 a 10 segundos enquanto o cliente estiver na tela e a cada minuto depois disso.
+</Tip>

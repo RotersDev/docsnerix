@@ -1,0 +1,39 @@
+---
+title: "Agentes de IA (MCP)"
+icon: "robot"
+description: "Deixe o seu agente de IA criar, consultar e desativar links de pagamento da loja."
+---
+
+Ao conectar a loja a um cliente de IA (ChatGPT, Claude, Cursor e outros) pelo MCP da Nerix, o agente ganha ferramentas de links de pagamento. Elas usam as mesmas regras da API.
+
+## Permissões
+
+Na chave usada pela conexão, marque:
+
+| Permissão | Libera |
+|:---|:---|
+| `mcp:connect` | Conectar a chave a um cliente de IA. |
+| `payment_links:read` | Listar e consultar links. |
+| `payment_links:write` | Criar e desativar links. |
+
+<Info>
+  Chaves antigas não recebem essas permissões automaticamente. Edite a chave e marque-as.
+</Info>
+
+## Ferramentas
+
+| Ferramenta | O que faz |
+|:---|:---|
+| `criar_link_pagamento` | Cria um link. Valor em reais (ex.: `49.90`), descrição, tipo, validade, referência e cliente. |
+| `listar_links_pagamento` | Lista os links, com filtro por status e referência. |
+| `ver_link_pagamento` | Mostra um link com formas de pagamento e últimos pagamentos. |
+| `desativar_link_pagamento` | Desativa um link. |
+
+## Confirmação antes de executar
+
+`criar_link_pagamento` e `desativar_link_pagamento` funcionam em duas etapas:
+
+1. O agente chama a ferramenta e recebe uma **prévia** do que será feito, sem nenhuma alteração.
+2. Depois que você aprova, o agente chama de novo com o `confirmation_token`. O token vale 5 minutos e só pode ser usado uma vez.
+
+Exemplo de pedido ao agente: *"Cria um link de R\$ 49,90 para o plano Pro, válido por 48 horas, e me manda a URL."*

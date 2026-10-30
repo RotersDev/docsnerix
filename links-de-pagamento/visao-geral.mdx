@@ -1,0 +1,101 @@
+---
+title: "Links de Pagamento"
+sidebarTitle: "Visão geral"
+icon: "link"
+description: "Crie um link pela API e receba por Pix, cartão ou Litecoin na página de pagamento da Nerix, sem montar checkout."
+---
+
+Com os **Links de Pagamento** sua aplicação cobra o cliente sem construir checkout e sem lidar com dados de cartão. Você cria o link, envia o cliente para a URL e recebe a confirmação por webhook.
+
+<CardGroup cols={2}>
+  <Card title="Base URL" icon="globe">
+    `https://api.nerix.com.br/api/v1`
+  </Card>
+  <Card title="Formas de pagamento" icon="credit-card">
+    Pix, cartão (com parcelamento) e Litecoin, conforme a loja tiver ativo.
+  </Card>
+  <Card title="Confirmação" icon="bell">
+    Webhook `payment_link.paid`, assinado com HMAC.
+  </Card>
+  <Card title="Agentes de IA" icon="robot">
+    As mesmas operações via MCP.
+  </Card>
+</CardGroup>
+
+## Como funciona
+
+<Steps>
+  <Step title="Crie o link">
+    Sua aplicação chama `POST /payment-links` com o valor em centavos e recebe a `url`.
+  </Step>
+  <Step title="Envie o cliente">
+    Redirecione o cliente ou mande a `url` por WhatsApp, e-mail ou chat. A página mostra as formas de pagamento ativas da loja.
+  </Step>
+  <Step title="Receba a confirmação">
+    Quando o pagamento é confirmado, a Nerix envia o webhook `payment_link.paid`. O cliente volta para a sua `successUrl`, se você informou uma.
+  </Step>
+  <Step title="Libere o pedido">
+    Libere pelo webhook ou consultando `GET /payment-links/{id}`. O valor cai na Carteira Nerix da loja.
+  </Step>
+</Steps>
+
+## Autenticação
+
+Use a **chave da loja** (`nerix_...`), criada no painel em **Integrações → API da loja**.
+
+```http
+Authorization: Bearer nerix_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+Também é aceito o header `x-nerix-api-key`.
+
+| Permissão da chave | Libera |
+|:---|:---|
+| `payment_links:write` | Criar e desativar links |
+| `payment_links:read` | Consultar e listar links |
+
+<Info>
+  Chaves que já têm `pix:write` e `pix:read` também funcionam com links de pagamento, sem precisar gerar outra.
+</Info>
+
+<Warning>
+  Chaves de Infoprodutos (`nerix_builder_...`) não criam links de pagamento e recebem `403 STORE_API_KEY_REQUIRED`.
+</Warning>
+
+## Valores
+
+Todos os valores são em **centavos**, como na API Pix: `4990` representa R\$ 49,90.
+
+## Status do link
+
+| `status` | Significado |
+|:---|:---|
+| `active` | Aceitando pagamentos. |
+| `paid` | Link de uso único já pago. |
+| `expired` | Passou da data de `expiresAt`. |
+| `cancelled` | Desativado pela loja. |
+
+## Tipos de link
+
+| `type` | Uso |
+|:---|:---|
+| `single` | Padrão. Uma cobrança, um pagamento. Ideal para pedidos. |
+| `reusable` | Várias pessoas podem pagar o mesmo link. Ideal para doações, planos fixos e link na bio. |
+
+## Exemplo rápido
+
+```bash
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/payment-links" \
+  --header "Authorization: Bearer SUA_API_KEY" \
+  --header "Content-Type: application/json" \
+  --header "Idempotency-Key: pedido-123" \
+  --data '{
+    "amount": 4990,
+    "description": "Plano Pro mensal",
+    "externalId": "pedido-123",
+    "successUrl": "https://seusite.com/obrigado"
+  }'
+```
+
+Mande o cliente para o campo `url` da resposta.

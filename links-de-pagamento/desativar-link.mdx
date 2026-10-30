@@ -1,0 +1,37 @@
+---
+title: "Desativar link"
+api: "POST https://api.nerix.com.br/api/v1/payment-links/{id}/cancel"
+description: "O link para de aceitar pagamentos na hora. Pagamentos já feitos não mudam."
+---
+
+Permissão necessária: `payment_links:write` (ou `pix:write`).
+
+<ParamField path="id" type="string" required>
+  ID do link.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl --request POST \
+  --url "https://api.nerix.com.br/api/v1/payment-links/cl9e19ef77128d489359a54a782a69abea/cancel" \
+  --header "Authorization: Bearer SUA_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "id": "cl9e19ef77128d489359a54a782a69abea",
+  "object": "payment_link",
+  "status": "cancelled",
+  "amount": 4990,
+  "paidCount": 0
+}
+```
+
+</ResponseExample>
+
+A operação é idempotente: desativar um link já desativado devolve o mesmo link, sem erro. Quem abrir o link desativado vê a mensagem "Link desativado".

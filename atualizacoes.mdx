@@ -9,6 +9,18 @@ Fique por dentro de tudo o que foi implementado na Nerix. Atualizamos a platafor
 
 ---
 
+<Update label="30 out. 2026" description="API de Links de Pagamento" tags={["Novidade", "API"]}>
+
+### 🔗 Links de Pagamento pela API
+* **Cobre sem montar checkout**: crie um link com `POST /payment-links` e envie o cliente para a página de pagamento da Nerix, com Pix, cartão parcelado e Litecoin.
+* **Feito para integrar**: valores em centavos, `externalId`, `metadata`, `Idempotency-Key`, retorno automático para a sua `successUrl` e nome e e-mail do cliente já preenchidos.
+* **Gestão completa**: consultar, listar com filtros e paginação, e desativar links.
+* **Webhooks novos**: `payment_link.paid` e `payment_link.refunded`, assinados com HMAC e enviados uma única vez por pagamento.
+* **Permissões próprias**: `payment_links:read` e `payment_links:write`. Chaves com `pix:*` continuam funcionando.
+* **Agentes de IA**: ferramentas MCP para criar, listar, consultar e desativar links, com prévia e confirmação.
+
+</Update>
+
 <Update label="08 jul. 2026" description="Nova API, Documentação e Editor de Códigos" tags={["Novidade", "API"]}>
 
 ### 📚 Documentação Reformulada

@@ -1,0 +1,52 @@
+---
+title: "Erros e limites"
+icon: "triangle-exclamation"
+description: "Códigos de erro e limites de requisição da API de Links de Pagamento."
+---
+
+## Formato dos erros
+
+```json
+{
+  "error": "successUrl deve usar https e não pode conter usuário ou senha.",
+  "code": "INVALID_REQUEST",
+  "field": "successUrl"
+}
+```
+
+`field` só aparece quando o erro é de um campo específico.
+
+| HTTP | `code` | Quando |
+|:---|:---|:---|
+| `400` | `INVALID_REQUEST` | Campo inválido. Veja `field` e `error`. |
+| `401` | (sem `code`) | Chave ausente, inválida ou inativa. |
+| `403` | `API_KEY_PERMISSION_DENIED` | A chave não tem a permissão necessária. |
+| `403` | `STORE_API_KEY_REQUIRED` | Foi usada uma chave de Infoprodutos em vez da chave da loja. |
+| `403` | `STORE_INACTIVE` | A loja da chave não está ativa. |
+| `404` | `NOT_FOUND` | O link não existe nesta loja. |
+| `409` | `IDEMPOTENCY_CONFLICT` | A `Idempotency-Key` já foi usada com outro valor ou tipo. |
+| `422` | `NO_PAYMENT_METHODS` | A loja não tem nenhuma forma de pagamento ativa. |
+| `429` | `RATE_LIMITED` | Limite de requisições atingido. Aguarde `retryAfter` segundos. |
+| `500` | `INTERNAL_ERROR` | Erro inesperado. Tente de novo com a mesma `Idempotency-Key`. |
+
+## Limites
+
+| Operação | Limite por chave |
+|:---|:---|
+| Criar e desativar | 60 requisições por minuto |
+| Consultar e listar | 120 requisições por minuto |
+
+As respostas trazem os headers `RateLimit-Limit`, `RateLimit-Remaining` e `RateLimit-Reset`.
+
+## Regras dos campos
+
+| Campo | Regra |
+|:---|:---|
+| `amount` | Inteiro, de `100` a `1000000` centavos. |
+| `description` | Até 120 caracteres. |
+| `type` | `single` ou `reusable`. |
+| `expiresInHours` | Inteiro de `1` a `720`. `null` só em `reusable`. |
+| `externalId` | Até 160 caracteres. |
+| `successUrl` | URL `https` completa, sem usuário e senha, até 500 caracteres. |
+| `customer.email` | E-mail válido. |
+| `metadata` | Até 30 chaves e 2 KB. Valores de texto, número, booleano ou `null`. |

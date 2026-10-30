@@ -1,0 +1,59 @@
+---
+title: "Listar links"
+api: "GET https://api.nerix.com.br/api/v1/payment-links"
+description: "Lista os links de pagamento criados pela API e por agentes de IA, do mais novo para o mais antigo."
+---
+
+Permissão necessária: `payment_links:read` (ou `pix:read`).
+
+<ParamField query="limit" type="integer" default="20">
+  Quantidade por página, de `1` a `100`.
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filtra por `active`, `paid`, `expired` ou `cancelled`.
+</ParamField>
+
+<ParamField query="externalId" type="string">
+  Filtra pela referência informada na criação.
+</ParamField>
+
+<ParamField query="startingAfter" type="string">
+  `id` do último link da página anterior, para buscar a próxima página.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url "https://api.nerix.com.br/api/v1/payment-links?status=paid&limit=20" \
+  --header "Authorization: Bearer SUA_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "cl9e19ef77128d489359a54a782a69abea",
+      "object": "payment_link",
+      "url": "https://pay.nerix.com.br/cl9e19ef77128d489359a54a782a69abea",
+      "status": "paid",
+      "type": "single",
+      "amount": 4990,
+      "externalId": "pedido-123",
+      "paidCount": 1,
+      "paidAmount": 4990
+    }
+  ],
+  "hasMore": true
+}
+```
+
+</ResponseExample>
+
+Para paginar, envie em `startingAfter` o `id` do último item de `data` enquanto `hasMore` for `true`.

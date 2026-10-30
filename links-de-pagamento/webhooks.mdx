@@ -1,0 +1,157 @@
+---
+title: "Webhooks de links"
+sidebarTitle: "Webhooks"
+icon: "bell"
+description: "Receba a confirmação de pagamento na hora e valide a assinatura de cada entrega."
+---
+
+Cadastre o webhook no painel em **Integrações → Webhooks**, marque o evento **`payment_link.paid`** e guarde o segredo `whsec_...` exibido na criação. Ele aparece uma única vez.
+
+## Eventos
+
+| Evento | Quando é enviado |
+|:---|:---|
+| `payment_link.paid` | Um pagamento do link foi confirmado (Pix, cartão ou Litecoin). |
+| `payment_link.refunded` | Um pagamento do link foi reembolsado ou contestado. |
+| `order.approved` | Também enviado para links criados pela API, com o bloco `payment_link`. |
+
+Cada evento sai **uma única vez por pagamento**, mesmo que o provedor de pagamento repita o aviso.
+
+## Payload de `payment_link.paid`
+
+```json
+{
+  "id": "evt_9812",
+  "type": "payment_link.paid",
+  "created_at": "2026-10-30T03:18:53.004Z",
+  "data": {
+    "payment_link": {
+      "id": "cl9e19ef77128d489359a54a782a69abea",
+      "object": "payment_link",
+      "url": "https://pay.nerix.com.br/cl9e19ef77128d489359a54a782a69abea",
+      "status": "paid",
+      "type": "single",
+      "amount": 4990,
+      "currency": "BRL",
+      "externalId": "pedido-123",
+      "metadata": { "plano": "pro", "usuario": 42 },
+      "paidCount": 1,
+      "paidAmount": 4990,
+      "duplicatePayment": false
+    },
+    "payment": {
+      "id": "MPX-1793330332102-K3J9QZ",
+      "object": "payment",
+      "status": "paid",
+      "method": "pix",
+      "amount": 4990,
+      "installments": null,
+      "customer": { "name": "Maria Silva", "email": "maria@exemplo.com" },
+      "paidAt": "2026-10-30T03:18:52.112Z"
+    }
+  }
+}
+```
+
+Use `data.payment_link.externalId` ou `data.payment_link.metadata` para achar o pedido no seu sistema.
+
+## Headers de cada entrega
+
+| Header | Conteúdo |
+|:---|:---|
+| `X-Nerix-Event` | Nome do evento. |
+| `X-Nerix-Timestamp` | Momento do envio, em segundos Unix (ex.: `1793330333`). |
+| `X-Nerix-Signature` | `v1=` seguido do HMAC-SHA256 em hexadecimal. |
+
+## Validar a assinatura
+
+A assinatura é o HMAC-SHA256 de `{timestamp}.{corpo bruto}`, com o seu segredo `whsec_...` como chave. Calcule sobre o corpo **exatamente como recebido**, antes de converter o JSON.
+
+<CodeGroup>
+
+```js Node.js (Express)
+import crypto from 'crypto';
+import express from 'express';
+
+const app = express();
+
+app.post('/webhooks/nerix', express.raw({ type: 'application/json' }), (req, res) => {
+  const timestamp = req.header('x-nerix-timestamp');
+  const received = String(req.header('x-nerix-signature') || '').replace(/^v1=/, '');
+  const expected = crypto
+    .createHmac('sha256', process.env.NERIX_WEBHOOK_SECRET)
+    .update(`${timestamp}.${req.body.toString('utf8')}`)
+    .digest('hex');
+
+  const valid = received.length === expected.length
+    && crypto.timingSafeEqual(Buffer.from(received), Buffer.from(expected));
+  if (!valid) return res.status(401).end();
+
+  const event = JSON.parse(req.body.toString('utf8'));
+  if (event.type === 'payment_link.paid') {
+    liberarPedido(event.data.payment_link.externalId);
+  }
+  res.status(200).end();
+});
+```
+
+```python Python (Flask)
+import hashlib, hmac, os
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.post("/webhooks/nerix")
+def nerix_webhook():
+    timestamp = request.headers.get("X-Nerix-Timestamp", "")
+    received = request.headers.get("X-Nerix-Signature", "").removeprefix("v1=")
+    raw = request.get_data(as_text=True)
+    expected = hmac.new(
+        os.environ["NERIX_WEBHOOK_SECRET"].encode(),
+        f"{timestamp}.{raw}".encode(),
+        hashlib.sha256,
+    ).hexdigest()
+    if not hmac.compare_digest(received, expected):
+        return "", 401
+
+    event = request.get_json()
+    if event["type"] == "payment_link.paid":
+        liberar_pedido(event["data"]["payment_link"]["externalId"])
+    return "", 200
+```
+
+```php PHP
+$raw = file_get_contents('php://input');
+$timestamp = $_SERVER['HTTP_X_NERIX_TIMESTAMP'] ?? '';
+$received = preg_replace('/^v1=/', '', $_SERVER['HTTP_X_NERIX_SIGNATURE'] ?? '');
+$expected = hash_hmac('sha256', $timestamp . '.' . $raw, getenv('NERIX_WEBHOOK_SECRET'));
+
+if (!hash_equals($expected, $received)) {
+    http_response_code(401);
+    exit;
+}
+
+$event = json_decode($raw, true);
+if ($event['type'] === 'payment_link.paid') {
+    liberarPedido($event['data']['payment_link']['externalId']);
+}
+http_response_code(200);
+```
+
+</CodeGroup>
+
+## Boas práticas
+
+- Recuse entregas com `X-Nerix-Timestamp` de mais de 5 minutos atrás. Isso impede que alguém reenvie um evento antigo capturado.
+- Responda com qualquer status `2xx` em até 20 segundos. Processe tarefas demoradas depois de responder.
+- Seu endpoint pode receber o mesmo evento de novo se você reenviar pelo painel. Use `data.payment.id` para não liberar duas vezes.
+- Entregas que falharem ficam no histórico do webhook no painel e podem ser reenviadas por lá.
+- O webhook precisa de uma URL pública. Redirecionamentos (3xx) contam como falha.
+
+<Warning>
+  Nunca libere o pedido só porque o cliente voltou pela `successUrl`. Ele pode abrir essa URL sem pagar. Confirme sempre pelo webhook ou por `GET /payment-links/{id}`.
+</Warning>
+
+## Sem webhook
+
+Se sua aplicação não pode receber webhooks, consulte `GET /payment-links/{id}` a cada 5 a 10 segundos enquanto o cliente estiver na página e a cada minuto depois disso. Libere quando o `status` for `paid` (link `single`) ou quando surgir um item com `status: "paid"` em `payments` (link `reusable`).
