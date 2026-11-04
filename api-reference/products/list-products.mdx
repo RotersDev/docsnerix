@@ -1,12 +1,40 @@
 ---
 title: "Listar Produtos"
 api: "GET /api/public/products"
-description: "Retorna todos os produtos/pacotes da sua loja."
+description: "Retorna os produtos da sua loja, com paginação e o estoque de cada produto e variante."
 ---
 
-Retorna os produtos cadastrados na loja. **Endpoints públicos** listam apenas produtos ativos. Com uma **API Key** válida, você pode visualizar todos os produtos, incluindo os inativos.
+Retorna os produtos cadastrados na loja, com o estoque disponível de cada produto e de cada variante. Sem `include_inactive`, só vêm produtos e variantes ativos.
+
+## Paginação
+
+Envie `page` (e, se quiser, `limit`) para receber a resposta paginada no formato `{ data, meta }`. A ordem é sempre a mesma entre as páginas, sem itens repetidos ou pulados.
+
+Para percorrer a loja inteira, comece em `page=1` e avance até `meta.last_page` (ou até `meta.has_more` ser `false`).
+
+O total também vem nos cabeçalhos de toda resposta: `X-Total-Count`, `X-Page`, `X-Per-Page` e `X-Last-Page`.
+
+<Note>
+Sem `page` e sem `with_meta`, a resposta é uma lista simples (array) com todos os produtos, como nas versões anteriores da API. Em lojas grandes, prefira paginar.
+</Note>
 
 ## Parâmetros de Query
+
+<ParamField query="page" type="number">
+  Página de resultados, começando em `1`. Com `page`, a resposta vem como `{ data, meta }`.
+</ParamField>
+
+<ParamField query="limit" default="20" type="number">
+  Itens por página, de `1` a `100`. Valores acima de `100` são reduzidos para `100`. O padrão é `20` quando `page` é enviado.
+</ParamField>
+
+<ParamField query="with_meta" default="false" type="boolean">
+  Se `true`, responde no formato `{ data, meta }` mesmo sem `page`.
+</ParamField>
+
+<ParamField query="include_inactive" default="false" type="boolean">
+  Se `true`, inclui produtos e variantes inativos (ocultos na loja). Use o campo `active` para diferenciar. **Requer API Key.**
+</ParamField>
 
 <ParamField query="category_id" type="number">
   Filtra produtos pertencentes à categoria correspondente ao ID informado.
@@ -17,26 +45,14 @@ Retorna os produtos cadastrados na loja. **Endpoints públicos** listam apenas p
 </ParamField>
 
 <ParamField query="search" type="string">
-  Pesquisa produtos pelo nome ou descrição contendo o termo informado.
-</ParamField>
-
-<ParamField query="page" default="1" type="number">
-  Página de resultados a ser exibida.
-</ParamField>
-
-<ParamField query="limit" default="20" type="number">
-  Quantidade de itens retornados por página (máx: `100`).
-</ParamField>
-
-<ParamField query="include_inactive" default="false" type="boolean">
-  Se `true`, inclui produtos inativos. **Requer API Key.**
+  Pesquisa produtos pelo nome ou descrição contendo o termo informado. A busca não é paginada: retorna até `limit` itens (padrão `100`) como lista simples e inclui, como itens separados, as variantes cujo nome combina com o termo.
 </ParamField>
 
 ## Exemplo de Requisição
 
 ```bash
 curl --request GET \
-  --url 'https://api.nerix.com.br/api/public/products?category_slug=jogos-pc&limit=10' \
+  --url 'https://api.nerix.com.br/api/public/products?page=1&limit=100&include_inactive=true' \
   --header 'X-nerixkey: SUA_CHAVE_AQUI'
 ```
 
@@ -49,23 +65,76 @@ curl --request GET \
       "id": 12,
       "name": "Minecraft Java & Bedrock Edition",
       "slug": "minecraft-java-bedrock",
+      "description": "Jogue em qualquer plataforma com uma única conta.",
       "price": "59.80",
       "promotional_price": null,
-      "description": "Jogue em qualquer plataforma com uma única conta.",
       "category_id": 3,
-      "infinite_stock": false,
-      "stock": 42,
-      "images": ["https://cdn.nerix.com.br/images/minecraft.png"],
-      "variants": [],
+      "images": ["https://cdn.nerix.com.br/stores/123/products/minecraft.webp"],
       "active": true,
+      "is_active": true,
+      "inventory_type": "lines",
+      "stock": 42,
+      "available_stock": 42,
+      "stock_limit": 42,
+      "infinite_stock": false,
+      "is_variant": false,
+      "variants": [],
       "created_at": "2026-01-15T10:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "name": "Game Pass Ultimate",
+      "slug": "game-pass-ultimate",
+      "description": "Assinatura com centenas de jogos.",
+      "price": "0.00",
+      "promotional_price": null,
+      "category_id": 3,
+      "images": [],
+      "active": true,
+      "is_active": true,
+      "inventory_type": "lines",
+      "stock": 0,
+      "available_stock": 0,
+      "stock_limit": 0,
+      "infinite_stock": false,
+      "is_variant": true,
+      "variants": [
+        {
+          "id": 301,
+          "name": "1 mês",
+          "price": "29.90",
+          "promotional_price": null,
+          "active": true,
+          "is_active": true,
+          "inventory_type": "lines",
+          "stock": 18,
+          "available_stock": 18,
+          "stock_limit": 18,
+          "infinite_stock": false
+        },
+        {
+          "id": 302,
+          "name": "Vitalício",
+          "price": "199.90",
+          "promotional_price": null,
+          "active": true,
+          "is_active": true,
+          "inventory_type": "text",
+          "stock": null,
+          "available_stock": null,
+          "stock_limit": -1,
+          "infinite_stock": true
+        }
+      ],
+      "created_at": "2026-02-02T14:30:00.000Z"
     }
   ],
   "meta": {
-    "total": 128,
+    "total": 150,
     "page": 1,
-    "limit": 20,
-    "last_page": 7
+    "limit": 100,
+    "last_page": 2,
+    "has_more": true
   }
 }
 ```
@@ -77,10 +146,33 @@ curl --request GET \
 | `id` | `number` | ID único do produto. |
 | `name` | `string` | Nome do produto. |
 | `slug` | `string` | Slug único para URL amigável. |
-| `price` | `string` | Preço regular formatado. |
-| `promotional_price` | `string \| null` | Preço promocional, se ativo. |
-| `stock` | `number` | Estoque disponível atual. |
-| `infinite_stock` | `boolean` | Se `true`, o produto não consome estoque. |
-| `images` | `array` | Lista de URLs das imagens. |
-| `variants` | `array` | Variantes de preço disponíveis. |
-| `active` | `boolean` | Se o produto está ativo e visível na loja. |
+| `description` | `string` | Descrição do produto (pode conter HTML). |
+| `price` | `string` | Preço regular. Em produtos com variantes, o preço fica em cada variante. |
+| `promotional_price` | `string \| null` | Preço promocional, se houver. |
+| `category_id` | `number \| null` | ID da categoria. |
+| `images` | `array` | URLs das imagens. A primeira é a principal. |
+| `active` | `boolean` | `false` quando o produto está oculto na loja (só aparece com `include_inactive=true`). `is_active` traz o mesmo valor. |
+| `inventory_type` | `string` | `lines` (uma chave por venda), `text` (mesmo conteúdo para todos, com quantidade) ou `file`. |
+| `stock` | `number \| null` | Quantidade disponível para venda agora. `null` = estoque infinito; `0` = esgotado. `available_stock` traz o mesmo valor. |
+| `stock_limit` | `number \| null` | Estoque configurado. `-1` = infinito. |
+| `infinite_stock` | `boolean` | `true` quando o estoque é infinito. |
+| `is_variant` | `boolean` | `true` quando o produto tem variantes. Nesse caso, preço e estoque ficam em cada variante. |
+| `variants` | `array` | Variantes na ordem da loja, cada uma com `id`, `name`, `price`, `promotional_price`, `active`, `inventory_type`, `stock`, `stock_limit` e `infinite_stock`. |
+
+### Objeto `meta`
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `total` | `number` | Total de produtos que atendem aos filtros. |
+| `page` | `number` | Página atual. |
+| `limit` | `number` | Itens por página. |
+| `last_page` | `number` | Número da última página. |
+| `has_more` | `boolean` | `true` enquanto houver próximas páginas. |
+
+## Limite de Requisições
+
+Este endpoint aceita **120 requisições por minuto por API Key**. Ao passar do limite, a resposta é `429 Too Many Requests` com o cabeçalho `Retry-After` (segundos para tentar de novo). Veja [Limites de Requisição](/api-reference/rate-limits).
+
+<Tip>
+Para ver as chaves (keys) de estoque de um produto, use [Obter Chaves do Produto](/api-reference/products/get-product-keys).
+</Tip>

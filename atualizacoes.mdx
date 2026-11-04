@@ -9,6 +9,17 @@ Fique por dentro de tudo o que foi implementado na Nerix. Atualizamos a platafor
 
 ---
 
+<Update label="04 nov. 2026" description="Listagem de produtos com paginação" tags={["Melhoria", "API"]}>
+
+### 📦 Listar Produtos para integrações
+* **Paginação de verdade**: com `page` e `limit` (até 100), a resposta vem como `{ data, meta }`, com `total`, `last_page` e `has_more`. O total também vem nos cabeçalhos `X-Total-Count` e `X-Last-Page`.
+* **Produtos inativos**: `include_inactive=true` traz produtos e variantes ocultos, com o campo `active`.
+* **Estoque das variantes corrigido**: `stock` agora mostra o estoque real de cada variante. `null` significa estoque infinito.
+* **Limite por API Key**: 120 requisições por minuto por chave, com `Retry-After` e cabeçalhos `X-RateLimit-*`.
+* **Compatível**: sem `page`, a resposta continua sendo a lista simples de antes.
+
+</Update>
+
 <Update label="30 out. 2026" description="API de Links de Pagamento" tags={["Novidade", "API"]}>
 
 ### 🔗 Links de Pagamento pela API
