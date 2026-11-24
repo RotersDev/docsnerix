@@ -55,6 +55,19 @@ Permissão necessária: `payment_links:write` (ou `pix:write`).
   Dados seus, devolvidos nas respostas e nos webhooks. Até 30 chaves (letras, números, `_`, `-` e `.`), com valores de texto, número, booleano ou `null`. Até 2 KB.
 </ParamField>
 
+<ParamField body="paymentMethods" type="string[]">
+  Formas de pagamento aceitas neste link: `pix`, `card`, `crypto`, `boleto` e `global` (pagamento internacional). Sem o campo, ou com lista vazia, valem todas as formas ativas na loja. Também aceita `payment_methods`.
+
+  Exemplo: `["card"]` cria um link só com cartão, sem a opção de Pix.
+</ParamField>
+
+## Formas de pagamento do link
+
+- Cada forma pedida precisa estar ativa na loja na hora da criação. Se não estiver, a resposta é `422 PAYMENT_METHOD_NOT_AVAILABLE` (ex.: pediu `pix` com o Pix desligado na loja).
+- Um valor desconhecido devolve `400 INVALID_PAYMENT_METHODS`.
+- A página do link mostra só as formas permitidas. Um pagamento por outra forma é recusado com `422 PAYMENT_METHOD_NOT_ALLOWED`.
+- Se a loja desligar depois uma forma que o link aceitava, ela some da página. Na resposta, `paymentMethods` mostra as formas que valem agora e `allowedPaymentMethods` mostra o que foi escolhido na criação (`null` = todas).
+
 <RequestExample>
 
 ```bash cURL
@@ -69,7 +82,8 @@ curl --request POST \
     "externalId": "pedido-123",
     "successUrl": "https://seusite.com/obrigado",
     "customer": { "name": "Maria Silva", "email": "maria@exemplo.com" },
-    "metadata": { "plano": "pro", "usuario": 42 }
+    "metadata": { "plano": "pro", "usuario": 42 },
+    "paymentMethods": ["pix", "card"]
   }'
 ```
 
@@ -86,6 +100,7 @@ const response = await fetch('https://api.nerix.com.br/api/v1/payment-links', {
     description: 'Plano Pro mensal',
     externalId: String(pedido.id),
     successUrl: 'https://seusite.com/obrigado',
+    paymentMethods: ['card'], // só cartão, sem Pix
   }),
 });
 const link = await response.json();
@@ -106,6 +121,7 @@ link = requests.post(
         "description": "Plano Pro mensal",
         "externalId": "pedido-123",
         "successUrl": "https://seusite.com/obrigado",
+        "paymentMethods": ["pix", "card"],
     },
     timeout=20,
 ).json()
@@ -127,6 +143,7 @@ curl_setopt_array($ch, [
         'description' => 'Plano Pro mensal',
         'externalId' => 'pedido-123',
         'successUrl' => 'https://seusite.com/obrigado',
+        'paymentMethods' => ['pix', 'card'],
     ]),
 ]);
 $link = json_decode(curl_exec($ch), true);
@@ -157,6 +174,7 @@ header('Location: ' . $link['url']);
   "paidAmount": 0,
   "lastPaidAt": null,
   "duplicatePayment": false,
+  "allowedPaymentMethods": ["pix", "card"],
   "paymentMethods": ["pix", "card"],
   "payments": []
 }
@@ -167,6 +185,14 @@ header('Location: ' . $link['url']);
   "error": "amount é obrigatório e deve ser um número inteiro em centavos (ex.: 1990 = R$ 19,90).",
   "code": "INVALID_REQUEST",
   "field": "amount"
+}
+```
+
+```json 422
+{
+  "error": "Pagamento por Pix desativado nesta loja.",
+  "code": "PAYMENT_METHOD_NOT_AVAILABLE",
+  "field": "paymentMethods"
 }
 ```
 
@@ -185,7 +211,8 @@ header('Location: ' . $link['url']);
 <ResponseField name="id" type="string">ID do link. Use nas consultas.</ResponseField>
 <ResponseField name="url" type="string">Página de pagamento para enviar ao cliente.</ResponseField>
 <ResponseField name="status" type="string">`active`, `paid`, `expired` ou `cancelled`.</ResponseField>
-<ResponseField name="paymentMethods" type="string[]">Formas de pagamento oferecidas hoje: `pix`, `card`, `crypto`.</ResponseField>
+<ResponseField name="paymentMethods" type="string[]">Formas de pagamento que a página oferece agora: `pix`, `card`, `crypto`, `boleto`, `global`.</ResponseField>
+<ResponseField name="allowedPaymentMethods" type="string[] | null">Formas escolhidas na criação do link. `null` quando o link aceita todas as formas ativas da loja.</ResponseField>
 <ResponseField name="paidCount" type="integer">Quantos pagamentos confirmados o link tem.</ResponseField>
 <ResponseField name="paidAmount" type="integer">Soma paga, em centavos.</ResponseField>
 <ResponseField name="duplicatePayment" type="boolean">`true` quando um link `single` foi pago mais de uma vez (ex.: Pix e cartão quase juntos). Devolva um dos pagamentos.</ResponseField>

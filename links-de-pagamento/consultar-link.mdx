@@ -37,6 +37,7 @@ curl --request GET \
   "paidAmount": 5240,
   "lastPaidAt": "2026-10-30T03:18:52.122Z",
   "duplicatePayment": false,
+  "allowedPaymentMethods": null,
   "paymentMethods": ["pix", "card"],
   "payments": [
     {
@@ -59,6 +60,11 @@ curl --request GET \
 ```
 
 </ResponseExample>
+
+## Formas de pagamento
+
+<ResponseField name="paymentMethods" type="string[]">Formas que a página do link oferece agora. Se a loja desligar uma forma, ela sai daqui.</ResponseField>
+<ResponseField name="allowedPaymentMethods" type="string[] | null">Formas escolhidas na criação com `paymentMethods`. `null` quando o link aceita todas as formas ativas da loja.</ResponseField>
 
 ## Pagamentos do link
 

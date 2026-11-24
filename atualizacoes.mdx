@@ -9,6 +9,16 @@ Fique por dentro de tudo o que foi implementado na Nerix. Atualizamos a platafor
 
 ---
 
+<Update label="23 nov. 2026" description="Formas de pagamento por link" tags={["Novidade", "API"]}>
+
+### 🔗 Escolha as formas de pagamento de cada link
+* **Novo campo `paymentMethods`**: ao criar o link, envie só as formas que quer aceitar, como `["card"]` para um link sem Pix. Sem o campo, valem todas as formas ativas na loja.
+* **Página fiel ao combinado**: o cliente só vê as formas permitidas, e um pagamento por outra forma é recusado com `PAYMENT_METHOD_NOT_ALLOWED`.
+* **Consulta mais clara**: `allowedPaymentMethods` mostra o que foi escolhido na criação e `paymentMethods` mostra o que vale agora.
+* **Erros novos**: `INVALID_PAYMENT_METHODS`, `PAYMENT_METHOD_NOT_AVAILABLE` e `PIX_DISABLED`.
+
+</Update>
+
 <Update label="04 nov. 2026" description="Listagem de produtos com paginação" tags={["Melhoria", "API"]}>
 
 ### 📦 Listar Produtos para integrações

@@ -19,13 +19,17 @@ description: "Códigos de erro e limites de requisição da API de Links de Paga
 | HTTP | `code` | Quando |
 |:---|:---|:---|
 | `400` | `INVALID_REQUEST` | Campo inválido. Veja `field` e `error`. |
+| `400` | `INVALID_PAYMENT_METHODS` | `paymentMethods` com uma forma desconhecida. |
 | `401` | (sem `code`) | Chave ausente, inválida ou inativa. |
 | `403` | `API_KEY_PERMISSION_DENIED` | A chave não tem a permissão necessária. |
 | `403` | `STORE_API_KEY_REQUIRED` | Foi usada uma chave de Infoprodutos em vez da chave da loja. |
 | `403` | `STORE_INACTIVE` | A loja da chave não está ativa. |
 | `404` | `NOT_FOUND` | O link não existe nesta loja. |
-| `409` | `IDEMPOTENCY_CONFLICT` | A `Idempotency-Key` já foi usada com outro valor ou tipo. |
+| `409` | `IDEMPOTENCY_CONFLICT` | A `Idempotency-Key` já foi usada com outro valor, tipo ou formas de pagamento. |
 | `422` | `NO_PAYMENT_METHODS` | A loja não tem nenhuma forma de pagamento ativa. |
+| `422` | `PAYMENT_METHOD_NOT_AVAILABLE` | Uma forma pedida em `paymentMethods` não está ativa na loja. |
+| `422` | `PAYMENT_METHOD_NOT_ALLOWED` | Na página do link: tentativa de pagar por uma forma que o link não aceita. |
+| `422` | `PIX_DISABLED` | Na página do link: o Pix da loja foi desligado. |
 | `429` | `RATE_LIMITED` | Limite de requisições atingido. Aguarde `retryAfter` segundos. |
 | `500` | `INTERNAL_ERROR` | Erro inesperado. Tente de novo com a mesma `Idempotency-Key`. |
 
@@ -50,3 +54,4 @@ As respostas trazem os headers `RateLimit-Limit`, `RateLimit-Remaining` e `RateL
 | `successUrl` | URL `https` completa, sem usuário e senha, até 500 caracteres. |
 | `customer.email` | E-mail válido. |
 | `metadata` | Até 30 chaves e 2 KB. Valores de texto, número, booleano ou `null`. |
+| `paymentMethods` | Lista com `pix`, `card`, `crypto`, `boleto` ou `global`. Cada uma ativa na loja. |
